@@ -1,0 +1,56 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+
+        env:
+          AGENCY_SANITY_PROJECT_ID: ${{ secrets.AGENCY_SANITY_PROJECT_ID }}
+          AGENCY_SANITY_DATASET: ${{ secrets.AGENCY_SANITY_DATASET }}
+          AGENCY_SANITY_API_VERSION: ${{ secrets.AGENCY_SANITY_API_VERSION }}
+
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+
+          # 2. Pass Secrets to the Server Script
+          envs: AGENCY_SANITY_PROJECT_ID,AGENCY_SANITY_DATASET,AGENCY_SANITY_API_VERSION
+
+          script: |
+            export PATH=$PATH:/usr/bin
+
+            cd /var/www/ecosystem
+
+            echo "⬇️ Pulling latest code..."
+            git fetch origin production
+            git checkout production
+            git pull origin production
+
+            cd agency
+
+            echo "🔑 Injecting Secrets..."
+            # We overwrite .env.local so the build has access to keys
+            echo "AGENCY_SANITY_PROJECT_ID=$AGENCY_SANITY_PROJECT_ID" > .env.local
+            echo "AGENCY_SANITY_DATASET=$AGENCY_SANITY_DATASET" >> .env.local
+            echo "AGENCY_SANITY_API_VERSION=$AGENCY_SANITY_API_VERSION" >> .env.local
+
+            echo "📦 Installing Dependencies..."
+            npm ci
+
+            echo "🏗️ Building Next.js..."
+            npm run build
+
+            echo "🚀 Reloading PM2..."
+            pm2 reload agency --update-env
+
+            echo "✅ Deployment Success!"
