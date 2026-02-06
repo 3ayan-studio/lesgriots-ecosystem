@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH
+      - name: Execute Deploy Script via SSH
         uses: appleboy/ssh-action@master
 
         env:
@@ -26,9 +26,7 @@ jobs:
           envs: AGENCY_SANITY_PROJECT_ID,AGENCY_SANITY_DATASET,AGENCY_SANITY_API_VERSION
 
           script: |
-            # stops the script on any error
             set -e
-
             export PATH=$PATH:/usr/bin
 
             cd /var/www/ecosystem
@@ -38,20 +36,10 @@ jobs:
             git checkout production
             git pull origin production
 
-            cd agency
-
             echo "🔑 Injecting Secrets..."
-            echo "AGENCY_SANITY_PROJECT_ID=$AGENCY_SANITY_PROJECT_ID" > .env.local
-            echo "AGENCY_SANITY_DATASET=$AGENCY_SANITY_DATASET" >> .env.local
-            echo "AGENCY_SANITY_API_VERSION=$AGENCY_SANITY_API_VERSION" >> .env.local
+            echo "AGENCY_SANITY_PROJECT_ID=$AGENCY_SANITY_PROJECT_ID"
+            echo "AGENCY_SANITY_DATASET=$AGENCY_SANITY_DATASET"
+            echo "AGENCY_SANITY_API_VERSION=$AGENCY_SANITY_API_VERSION"
 
-            echo "📦 Installing Dependencies..."
-            npm ci --legacy-peer-deps
-
-            echo "🏗️ Building Next.js..."
-            npm run build
-
-            echo "🚀 Reloading PM2..."
-            pm2 reload agency --update-env
-
-            echo "✅ Deployment Success!"
+            chmod +x scripts/deploy.sh
+            bash scripts/deploy.sh
