@@ -12,18 +12,14 @@ echo "🚀 STARTING ECOSYSTEM DEPLOYMENT"
 # --- 1. GENERATE ENV FILES ---
 echo "🔑 Generating .env files..."
 
-# Function to write env file
 create_env_file() {
     local target_dir=$1
     echo "Writing .env.local to $target_dir"
     
-    # We use the variables that were exported in the YAML
     echo "AGENCY_SANITY_PROJECT_ID=$AGENCY_SANITY_PROJECT_ID" > "$target_dir/.env.local"
     echo "AGENCY_SANITY_DATASET=$AGENCY_SANITY_DATASET" >> "$target_dir/.env.local"
     echo "AGENCY_SANITY_API_VERSION=$AGENCY_SANITY_API_VERSION" >> "$target_dir/.env.local"
-    
-    # Sanity Studio often looks for 'SANITY_STUDIO_' prefixes too, 
-    # but if your config uses process.env.AGENCY_..., this is sufficient.
+    echo "AGENCY_SANITY_STUDIO_APP_ID=$AGENCY_SANITY_STUDIO_APP_ID" >> "$target_dir/.env.local"
 }
 
 create_env_file $AGENCY_DIR
