@@ -27,6 +27,9 @@ jobs:
           envs: AGENCY_SANITY_PROJECT_ID,AGENCY_SANITY_DATASET,AGENCY_SANITY_API_VERSION
 
           script: |
+            # stops the script on any error
+            set -e
+
             export PATH=$PATH:/usr/bin
 
             cd /var/www/ecosystem
