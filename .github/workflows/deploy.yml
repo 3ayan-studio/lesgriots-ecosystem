@@ -23,7 +23,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
 
-          # 2. Pass Secrets to the Server Script
           envs: AGENCY_SANITY_PROJECT_ID,AGENCY_SANITY_DATASET,AGENCY_SANITY_API_VERSION
 
           script: |
