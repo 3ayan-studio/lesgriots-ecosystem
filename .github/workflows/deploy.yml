@@ -42,7 +42,6 @@ jobs:
             cd agency
 
             echo "🔑 Injecting Secrets..."
-            # We overwrite .env.local so the build has access to keys
             echo "AGENCY_SANITY_PROJECT_ID=$AGENCY_SANITY_PROJECT_ID" > .env.local
             echo "AGENCY_SANITY_DATASET=$AGENCY_SANITY_DATASET" >> .env.local
             echo "AGENCY_SANITY_API_VERSION=$AGENCY_SANITY_API_VERSION" >> .env.local
