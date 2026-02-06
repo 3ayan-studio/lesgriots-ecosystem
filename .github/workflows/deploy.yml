@@ -48,7 +48,7 @@ jobs:
             echo "AGENCY_SANITY_API_VERSION=$AGENCY_SANITY_API_VERSION" >> .env.local
 
             echo "📦 Installing Dependencies..."
-            npm ci
+            npm ci --legacy-peer-deps
 
             echo "🏗️ Building Next.js..."
             npm run build
