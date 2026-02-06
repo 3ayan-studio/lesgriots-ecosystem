@@ -2,8 +2,8 @@ name: Deploy Production
 
 on:
   push:
-    branches:
-      - production
+    tags:
+      - "v*" # vA.B.C : A+1 New "big" version, B+1 change in app, c+1 fixes or patches etc
 
 jobs:
   deploy:
