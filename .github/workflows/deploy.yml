@@ -33,8 +33,7 @@ jobs:
 
             echo "⬇️ Pulling latest code..."
             git fetch origin production
-            git checkout production
-            git pull origin production
+            git reset --hard origin/production
 
             echo "🔑 Injecting Secrets..."
             echo "AGENCY_SANITY_PROJECT_ID=$AGENCY_SANITY_PROJECT_ID"
