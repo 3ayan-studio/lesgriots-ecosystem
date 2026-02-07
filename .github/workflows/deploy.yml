@@ -13,10 +13,10 @@ jobs:
         uses: appleboy/ssh-action@master
 
         env:
-          AGENCY_SANITY_PROJECT_ID: ${{ secrets.AGENCY_SANITY_PROJECT_ID }}
-          AGENCY_SANITY_DATASET: ${{ secrets.AGENCY_SANITY_DATASET }}
-          AGENCY_SANITY_STUDIO_APP_ID: ${{ secrets.AGENCY_SANITY_STUDIO_APP_ID }}
-          AGENCY_SANITY_API_VERSION: ${{ secrets.AGENCY_SANITY_API_VERSION }}
+          SANITY_STUDIO_AGENCY_PROJECT_ID: ${{ secrets.SANITY_STUDIO_AGENCY_PROJECT_ID }}
+          SANITY_STUDIO_AGENCY_DATASET: ${{ secrets.SANITY_STUDIO_AGENCY_DATASET }}
+          SANITY_STUDIO_AGENCY_STUDIO_APP_ID: ${{ secrets.SANITY_STUDIO_AGENCY_STUDIO_APP_ID }}
+          SANITY_STUDIO_AGENCY_API_VERSION: ${{ secrets.SANITY_STUDIO_AGENCY_API_VERSION }}
 
         with:
           host: ${{ secrets.HOST }}
@@ -24,7 +24,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
 
-          envs: AGENCY_SANITY_PROJECT_ID,AGENCY_SANITY_DATASET,AGENCY_SANITY_STUDIO_APP_ID,AGENCY_SANITY_API_VERSION
+          envs: SANITY_STUDIO_AGENCY_PROJECT_ID,SANITY_STUDIO_AGENCY_DATASET,SANITY_STUDIO_AGENCY_STUDIO_APP_ID,SANITY_STUDIO_AGENCY_API_VERSION
 
           script: |
             set -e
@@ -37,10 +37,10 @@ jobs:
             git reset --hard origin/production
 
             echo "🔑 Injecting Secrets..."
-            echo "AGENCY_SANITY_PROJECT_ID=$AGENCY_SANITY_PROJECT_ID"
-            echo "AGENCY_SANITY_DATASET=$AGENCY_SANITY_DATASET"
-            echo "AGENCY_SANITY_STUDIO_APP_ID=$AGENCY_SANITY_STUDIO_APP_ID"
-            echo "AGENCY_SANITY_API_VERSION=$AGENCY_SANITY_API_VERSION"
+            echo "SANITY_STUDIO_AGENCY_PROJECT_ID=$SANITY_STUDIO_AGENCY_PROJECT_ID"
+            echo "SANITY_STUDIO_AGENCY_DATASET=$SANITY_STUDIO_AGENCY_DATASET"
+            echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=$SANITY_STUDIO_AGENCY_STUDIO_APP_ID"
+            echo "SANITY_STUDIO_AGENCY_API_VERSION=$SANITY_STUDIO_AGENCY_API_VERSION"
 
             chmod +x scripts/deploy.sh
             bash scripts/deploy.sh
