@@ -1,0 +1,27 @@
+name: Orchestration
+
+on:
+  push:
+    tags:
+      - "v*" # Triggers on v1.0, v20.15.10, etc. NO SLASHES ONLY INTERGERS, DOTS IN BETWEEN
+
+jobs:
+  # --- PHASE 1: BUILD & TEST (Parallel) ---
+  check-agency:
+    uses: ./.github/workflows/build-agency.yml
+    secrets: inherit
+
+  check-studio:
+    uses: ./.github/workflows/build-studio.yml
+    secrets: inherit
+
+  # --- PHASE 2: ATOMIC DEPLOY (Sequential) ---
+  deploy-agency:
+    needs: check-agency
+    uses: ./.github/workflows/deploy-agency.yml
+    secrets: inherit
+
+  deploy-studio:
+    needs: check-studio
+    uses: ./.github/workflows/deploy-studio.yml
+    secrets: inherit
