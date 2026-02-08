@@ -1,0 +1,28 @@
+name: "✅ CI: Studio"
+on:
+  workflow_call:
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install & Build
+        working-directory: ./studio
+        env:
+          SANITY_STUDIO_AGENCY_PROJECT_ID: ${{ secrets.SANITY_STUDIO_AGENCY_PROJECT_ID }}
+          SANITY_STUDIO_AGENCY_DATASET: ${{ secrets.SANITY_STUDIO_AGENCY_DATASET }}
+          SANITY_STUDIO_AGENCY_STUDIO_APP_ID: ${{ secrets.SANITY_STUDIO_AGENCY_STUDIO_APP_ID }}
+          SANITY_STUDIO_AGENCY_API_VERSION: ${{ secrets.SANITY_STUDIO_AGENCY_API_VERSION }}
+        run: |
+          npm ci --legacy-peer-deps
+          npm run build
