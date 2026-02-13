@@ -23,6 +23,7 @@ jobs:
           SANITY_STUDIO_AGENCY_DATASET: ${{ secrets.SANITY_STUDIO_AGENCY_DATASET }}
           SANITY_STUDIO_AGENCY_STUDIO_APP_ID: ${{ secrets.SANITY_STUDIO_AGENCY_STUDIO_APP_ID }}
           SANITY_STUDIO_AGENCY_API_VERSION: ${{ secrets.SANITY_STUDIO_AGENCY_API_VERSION }}
+          SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
 
         run: |
           npm ci --legacy-peer-deps

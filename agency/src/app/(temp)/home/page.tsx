@@ -12,7 +12,7 @@ export default function TemporaryHome() {
                 {/* Logo Container */}
                 <div className="w-[220px] lg:w-[290px] flex justify-center lg:justify-start shrink-0">
                     <Image
-                        src="/logo.png"
+                        src="/images/logo.png"
                         alt="LES GRIOTSxSTUDIO logo"
                         width={500}
                         height={500}

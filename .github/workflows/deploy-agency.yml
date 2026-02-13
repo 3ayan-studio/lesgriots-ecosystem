@@ -42,6 +42,7 @@ jobs:
             echo "SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_STUDIO_AGENCY_DATASET }}" >> .env.local
             echo "SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_STUDIO_AGENCY_API_VERSION }}" >> .env.local
             echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_STUDIO_AGENCY_STUDIO_APP_ID }}" >> .env.local
+            echo "SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}" >> .env.local
 
             echo "📦 Installing..."
             npm ci --legacy-peer-deps

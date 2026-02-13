@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/styles/globals.css";
 
 // const akkurat = localFont({
 //     src: "./fonts/AkkuratMono-Regular.ttf",

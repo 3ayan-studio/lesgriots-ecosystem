@@ -17,10 +17,21 @@ export const projectType = defineType({
             validation: (rule) => rule.required(),
         }),
         defineField({
-            name: 'publishedAt',
-            type: 'datetime',
-            initialValue: () => new Date().toISOString(),
-            validation: (rule) => rule.required(),
-        })
-    ]
+            name: 'coverImage',
+            type: 'image',
+            options: { hotspot: true }, // Important for cropping!
+            fields: [
+                {
+                    name: 'alt',
+                    type: 'string',
+                    title: 'Alternative text',
+                }
+            ]
+        }),
+        defineField({
+            name: 'videoUrl', // Simple MP4 link or YouTube
+            type: 'url',
+            title: 'Video URL (Optional)',
+        }),
+    ],
 })
