@@ -16,9 +16,9 @@ jobs:
     secrets: inherit
 
   # --- PHASE 2: SETUP FILES AND DIRECTORIES ---
-  setup-directories:
+  stage-release:
     needs: [check-agency, check-studio]
-    uses: ./.github/workflows/setup-directories.yml
+    uses: ./.github/workflows/stage-release.yml
 
   # --- PHASE 3: ATOMIC DEPLOY (Sequential) ---
   deploy-agency:
@@ -32,6 +32,6 @@ jobs:
     secrets: inherit
 
   # --- PHASE 4: WARM UP CACHE ---
-  warm-up-cache-agency:
+  post-deployment:
     needs: setup-directories
-    uses: ./.github/workflows/warm-up-cache-agency.yml
+    uses: ./.github/workflows/post-deployment.yml
