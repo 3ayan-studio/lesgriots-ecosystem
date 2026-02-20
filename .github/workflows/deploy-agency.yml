@@ -9,40 +9,33 @@ jobs:
       - name: Atomic Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
 
             # --- CONFIGURATION ---
-            # We use the TAG name for the folder (e.g., agency-v1.0.0)
+            # We use the TAG name for the folder (e.g., release-v1.0.0)
             # This makes it very easy to rollback manually if needed
             TAG_NAME="${{ github.ref_name }}"
-            RELEASE_DIR="/var/www/ecosystem/releases/agency-$TAG_NAME"
-            LIVE_LINK="/var/www/ecosystem/agency"
-            REPO_URL="git@github.com:${{ github.repository }}.git"
+            RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+            LIVE_LINK="/var/www/ecosystem/current"
 
             echo "🚀 Deploying Tag: $TAG_NAME"
 
-            # 1. Clone specific tag
-            # We clone into a fresh folder named after the version
-            if [ -d "$RELEASE_DIR" ]; then
-              echo "⚠️ Version folder exists. Cleaning it up..."
-              rm -rf $RELEASE_DIR
-            fi
-
-            git clone --branch $TAG_NAME --depth 1 $REPO_URL $RELEASE_DIR
-
-            # 2. Build
+            # Build
             cd $RELEASE_DIR/agency
 
-            # Create .env.local
-            echo "SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_STUDIO_AGENCY_PROJECT_ID }}" >> .env.local
-            echo "SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_STUDIO_AGENCY_DATASET }}" >> .env.local
-            echo "SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_STUDIO_AGENCY_API_VERSION }}" >> .env.local
-            echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_STUDIO_AGENCY_STUDIO_APP_ID }}" >> .env.local
-            echo "SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}" >> .env.local
+            # Create .env
+            echo "NUXT_SANITY_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
+            echo "NUXT_SANITY_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
+            echo "NUXT_SANITY_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
+            echo "NUXT_SANITY_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
+            echo "NUXT_SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}" >> .env
+            echo "NUXT_NITRO_CACHE_DIR"=${{ secrets.AGENCY_NITRO_CACHE_DIR }}" >> .env
+            echo "NUXT_DEPLOY_SECRET"=${{ secrets.DEPLOY_SECRET }}" >> .env
+            echo "NUXT_BASE_URL=${{ secrets.AGENCY_BASE_URL }}" >> .env
 
             echo "📦 Installing..."
             npm ci --legacy-peer-deps
@@ -50,17 +43,13 @@ jobs:
             echo "🔨 Building..."
             npm run build
 
-            # 3. Atomic Swap
+            # Atomic Swap
             # The 'ln -sfn' command updates the link instantly.
             echo "✅ Build OK. Swapping to $TAG_NAME..."
             ln -sfn $RELEASE_DIR/agency $LIVE_LINK
 
-            # 4. Reload PM2
+            # Reload PM2
             # Since PM2 watches the symlink, a reload picks up the new files.
-            pm2 reload agency
-
-            # 5. Cleanup (Keep last 5 versions)
-            cd /var/www/ecosystem/releases
-            ls -dt agency-* | tail -n +6 | xargs -r rm -rf
+            pm2 reload $LIVE_LINK/ops/pm2/ecosystem.config.cjs --only agency --update-env
 
             echo "🎉 Deployed $TAG_NAME Successfully!"

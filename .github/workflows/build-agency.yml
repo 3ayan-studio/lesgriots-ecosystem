@@ -19,11 +19,14 @@ jobs:
       - name: Install & Build
         working-directory: ./agency
         env:
-          SANITY_STUDIO_AGENCY_PROJECT_ID: ${{ secrets.SANITY_STUDIO_AGENCY_PROJECT_ID }}
-          SANITY_STUDIO_AGENCY_DATASET: ${{ secrets.SANITY_STUDIO_AGENCY_DATASET }}
-          SANITY_STUDIO_AGENCY_STUDIO_APP_ID: ${{ secrets.SANITY_STUDIO_AGENCY_STUDIO_APP_ID }}
-          SANITY_STUDIO_AGENCY_API_VERSION: ${{ secrets.SANITY_STUDIO_AGENCY_API_VERSION }}
-          SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
+          NUXT_SANITY_AGENCY_PROJECT_ID: ${{ secrets.SANITY_AGENCY_PROJECT_ID }}
+          NUXT_SANITY_AGENCY_DATASET: ${{ secrets.SANITY_AGENCY_DATASET }}
+          NUXT_SANITY_AGENCY_STUDIO_APP_ID: ${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}
+          NUXT_SANITY_AGENCY_API_VERSION: ${{ secrets.SANITY_AGENCY_API_VERSION }}
+          NUXT_SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
+          NUXT_DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
+          NUXT_NITRO_CACHE_DIR: ${{ secrets.AGENCY_NITRO_CACHE_DIR }}
+          NUXT_BASE_URL: ${{ secrets.AGENCY_BASE_URL }}
 
         run: |
           npm ci --legacy-peer-deps

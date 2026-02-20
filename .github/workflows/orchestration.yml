@@ -15,13 +15,23 @@ jobs:
     uses: ./.github/workflows/build-studio.yml
     secrets: inherit
 
-  # --- PHASE 2: ATOMIC DEPLOY (Sequential) ---
+  # --- PHASE 2: SETUP FILES AND DIRECTORIES ---
+  setup-directories:
+    needs: [check-agency, check-studio]
+    uses: ./.github/workflows/setup-directories.yml
+
+  # --- PHASE 3: ATOMIC DEPLOY (Sequential) ---
   deploy-agency:
     needs: check-agency
     uses: ./.github/workflows/deploy-agency.yml
     secrets: inherit
 
   deploy-studio:
-    needs: check-studio
+    needs: setup-directories
     uses: ./.github/workflows/deploy-studio.yml
     secrets: inherit
+
+  # --- PHASE 4: WARM UP CACHE ---
+  warm-up-cache-agency:
+    needs: setup-directories
+    uses: ./.github/workflows/warm-up-cache-agency.yml

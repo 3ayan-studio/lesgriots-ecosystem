@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { getTitlePreview } from '../utils/preview'
 
 export const projectType = defineType({
     name: 'project',
@@ -7,31 +8,46 @@ export const projectType = defineType({
     fields: [
         defineField({
             name: 'title',
-            type: 'string',
+            type: 'internationalizedArrayString',
             validation: (rule) => rule.required(),
         }),
-        defineField({
-            name: 'slug',
-            type: 'slug',
-            options: { source: 'title' },
-            validation: (rule) => rule.required(),
-        }),
-        defineField({
-            name: 'coverImage',
-            type: 'image',
-            options: { hotspot: true }, // Important for cropping!
-            fields: [
-                {
-                    name: 'alt',
-                    type: 'string',
-                    title: 'Alternative text',
-                }
-            ]
-        }),
-        defineField({
-            name: 'videoUrl', // Simple MP4 link or YouTube
-            type: 'url',
-            title: 'Video URL (Optional)',
-        }),
+        // defineField({
+        //     name: 'slug',
+        //     type: 'slug',
+        //     options: { source: 'title' },
+        //     validation: (rule) => rule.required(),
+        // }),
+        // defineField({
+        //     name: 'coverImage',
+        //     type: 'image',
+        //     options: { hotspot: true }, // Important for cropping!
+        //     fields: [
+        //         {
+        //             name: 'alt',
+        //             type: 'string',
+        //             title: 'Alternative text',
+        //         }
+        //     ]
+        // }),
+        // defineField({
+        //     name: 'videoUrl', // Simple MP4 link or YouTube
+        //     type: 'url',
+        //     title: 'Video URL (Optional)',
+        // }),
+        // defineField({
+        //     name: 'description',
+        //     type: 'localeText',
+        //     validation: (rule) => rule.required()
+        // })
     ],
+    preview: {
+        select: {
+            title: 'title'
+        },
+        prepare(selection) {
+            return {
+                title: getTitlePreview(selection.title)
+            }
+        }
+    }
 })

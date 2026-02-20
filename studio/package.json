@@ -10,17 +10,18 @@
         "build": "sanity build",
         "deploy": "sanity deploy",
         "deploy-graphql": "sanity graphql deploy",
-        "extypes": "npx sanity schema extract --path ../agency/src/sanity/schemas.json",
+        "extypes": "npx sanity schema extract --path ../agency/app/utils/sanity-schemas.json",
         "gentypes": "npx sanity typegen generate"
     },
     "keywords": [
         "sanity"
     ],
     "dependencies": {
-        "@sanity/vision": "^5.8.1",
+        "@sanity/vision": "^5.11.0",
         "react": "^19.1",
         "react-dom": "^19.1",
-        "sanity": "^5.8.1",
+        "sanity": "^5.11.0",
+        "sanity-plugin-internationalized-array": "^4.0.1",
         "styled-components": "^6.1.18"
     },
     "devDependencies": {
