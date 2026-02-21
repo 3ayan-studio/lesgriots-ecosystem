@@ -12,5 +12,10 @@ export default defineCliConfig({
          */
         autoUpdates: true,
         appId: process.env.SANITY_STUDIO_AGENCY_STUDIO_APP_ID
+    },
+    typegen: {
+        path: '../agency/composables/sanity/*.{ts,tsx,js,jsx}',
+        schema: '../agency/app/utils/sanity-schemas.json',
+        generates: '../agency/types/sanity.types.ts',
     }
 })

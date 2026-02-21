@@ -1,28 +1,42 @@
-name: "✅ CI: Studio"
+name: "🚀 CD: Studio (Atomic)"
 on:
   workflow_call:
 
 jobs:
-  test-build:
+  deploy-vps:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Atomic Deploy
+        uses: appleboy/ssh-action@master
         with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: studio/package-lock.json
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
 
-      - name: Install & Build
-        working-directory: ./studio
-        env:
-          SANITY_STUDIO_AGENCY_PROJECT_ID: ${{ secrets.SANITY_STUDIO_AGENCY_PROJECT_ID }}
-          SANITY_STUDIO_AGENCY_DATASET: ${{ secrets.SANITY_STUDIO_AGENCY_DATASET }}
-          SANITY_STUDIO_AGENCY_STUDIO_APP_ID: ${{ secrets.SANITY_STUDIO_AGENCY_STUDIO_APP_ID }}
-          SANITY_STUDIO_AGENCY_API_VERSION: ${{ secrets.SANITY_STUDIO_AGENCY_API_VERSION }}
-        run: |
-          npm ci --legacy-peer-deps
-          npm run build
+            # --- CONFIGURATION ---
+            # We use the TAG name for the folder (e.g., release-v1.0.0)
+            # This makes it very easy to rollback manually if needed
+            TAG_NAME="${{ github.ref_name }}"
+            RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+
+            echo "🚀 Deploying Studio Tag: $TAG_NAME"
+
+            # Build
+            cd $RELEASE_DIR/studio
+
+            # Create .env
+            echo "SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
+            echo "SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
+            echo "SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
+            echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
+
+            echo "📦 Installing..."
+            npm ci --legacy-peer-deps
+
+            echo "🔨 Building..."
+            npm run build
+            # (This creates a 'dist' folder inside 'studio')
+
+            # Atomic Swap moved to post-deploy.yml

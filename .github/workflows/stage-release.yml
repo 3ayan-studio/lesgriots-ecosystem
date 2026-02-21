@@ -1,0 +1,30 @@
+name: "📦 Stage Release Codebase"
+on:
+  workflow_call:
+
+jobs:
+  prepare-vps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup files and directories
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            # --- CONFIGURATION ---            
+            # We use the TAG name for the folder (e.g., release-v1.0.0)
+            # This makes it very easy to rollback manually if needed
+            TAG_NAME="${{ github.ref_name }}"
+            RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+            REPO_URL="git@github.com:${{ github.repository }}.git"
+
+            echo "Cloning Repository Tag: $TAG_NAME"
+
+            # Clone specific tag
+            git clone --branch $TAG_NAME --depth 1 $REPO_URL $RELEASE_DIR
+
+            echo "DIRECTORY SETUP DONE !"
