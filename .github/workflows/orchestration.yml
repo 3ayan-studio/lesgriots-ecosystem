@@ -36,3 +36,4 @@ jobs:
   deploy:
     needs: [build-agency, build-studio]
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
