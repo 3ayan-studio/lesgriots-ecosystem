@@ -8,30 +8,30 @@ on:
 jobs:
   # --- PHASE 1: BUILD & TEST (Parallel) ---
   check-agency:
-    uses: ./.github/workflows/build-agency.yml
+    uses: ./.github/workflows/check-agency.yml
     secrets: inherit
 
   check-studio:
-    uses: ./.github/workflows/build-studio.yml
+    uses: ./.github/workflows/check-studio.yml
     secrets: inherit
 
-  # --- PHASE 2: SETUP FILES AND DIRECTORIES ---
+  # --- PHASE 2: SETUP FILES AND DIRECTORIES (Sequential) ---
   stage-release:
     needs: [check-agency, check-studio]
     uses: ./.github/workflows/stage-release.yml
 
-  # --- PHASE 3: ATOMIC DEPLOY (Sequential) ---
-  deploy-agency:
-    needs: check-agency
-    uses: ./.github/workflows/deploy-agency.yml
+  # --- PHASE 3: BUILD (Parallel) ---
+  build-agency:
+    needs: stage-release
+    uses: ./.github/workflows/build-agency.yml
     secrets: inherit
 
-  deploy-studio:
-    needs: setup-directories
-    uses: ./.github/workflows/deploy-studio.yml
+  build-studio:
+    needs: stage-release
+    uses: ./.github/workflows/build-studio.yml
     secrets: inherit
 
-  # --- PHASE 4: WARM UP CACHE ---
-  post-deployment:
-    needs: setup-directories
-    uses: ./.github/workflows/post-deployment.yml
+  # --- PHASE 5: DEPLOYMENT, CLEAN UP AND ISR SYNC---
+  deploy:
+    needs: [build-agency, build-studio]
+    uses: ./.github/workflows/deploy.yml

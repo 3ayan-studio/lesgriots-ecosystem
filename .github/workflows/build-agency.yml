@@ -1,33 +1,46 @@
-name: "✅ CI: Agency"
+name: "Building before atomic swap"
 on:
   workflow_call:
 
 jobs:
-  test-build:
+  deploy-vps:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Building before atomic swap
+        uses: appleboy/ssh-action@master
         with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: agency/package-lock.json
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
 
-      - name: Install & Build
-        working-directory: ./agency
-        env:
-          NUXT_SANITY_AGENCY_PROJECT_ID: ${{ secrets.SANITY_AGENCY_PROJECT_ID }}
-          NUXT_SANITY_AGENCY_DATASET: ${{ secrets.SANITY_AGENCY_DATASET }}
-          NUXT_SANITY_AGENCY_STUDIO_APP_ID: ${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}
-          NUXT_SANITY_AGENCY_API_VERSION: ${{ secrets.SANITY_AGENCY_API_VERSION }}
-          NUXT_SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
-          NUXT_DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
-          NUXT_NITRO_CACHE_DIR: ${{ secrets.AGENCY_NITRO_CACHE_DIR }}
-          NUXT_BASE_URL: ${{ secrets.AGENCY_BASE_URL }}
+            # --- CONFIGURATION ---
+            # We use the TAG name for the folder (e.g., release-v1.0.0)
+            # This makes it very easy to rollback manually if needed
+            TAG_NAME="${{ github.ref_name }}"
+            RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+            LIVE_LINK="/var/www/ecosystem/current"
 
-        run: |
-          npm ci --legacy-peer-deps
-          npm run build
+            echo "🚀 Deploying Tag: $TAG_NAME"
+
+            # Build
+            cd $RELEASE_DIR/agency
+
+            # Create .env
+            echo "NUXT_SANITY_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
+            echo "NUXT_SANITY_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
+            echo "NUXT_SANITY_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
+            echo "NUXT_SANITY_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
+            echo "NUXT_SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}" >> .env
+            echo "NUXT_NITRO_CACHE_DIR"=${{ secrets.AGENCY_NITRO_CACHE_DIR }}" >> .env
+            echo "NUXT_DEPLOY_SECRET"=${{ secrets.DEPLOY_SECRET }}" >> .env
+            echo "NUXT_BASE_URL=${{ secrets.AGENCY_BASE_URL }}" >> .env
+
+            echo "📦 Installing..."
+            npm ci --legacy-peer-deps
+
+            echo "🔨 Building..."
+            npm run build
+
+            # Atomic Swap moved to post-deploy.yml

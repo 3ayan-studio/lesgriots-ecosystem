@@ -3,7 +3,7 @@ module.exports = {
     apps: [
         {
             name: "agency",
-            cwd: "/var/www/ecosystem/agency", // LIVE symlink path
+            cwd: "/var/www/ecosystem/current/agency",
             // script: "node",
             // args: ".output/server/index.mjs",
             script: ".output/server/index.mjs",

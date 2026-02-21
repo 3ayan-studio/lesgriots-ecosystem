@@ -1,0 +1,40 @@
+name: "🚀 Deployment, Clean up and Cache Setup"
+on:
+  workflow_call:
+
+jobs:
+  post-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy, Cleanup and Trigger Nuxt ISR Build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            TAG_NAME="${{ github.ref_name }}"
+            RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+            LIVE_LINK="/var/www/ecosystem/current"
+
+            echo "✅ All Build OK. Swapping to $TAG_NAME..."
+            ln -sfn $RELEASE_DIR $LIVE_LINK
+
+            echo "-- Studio Deployed Successfully! --"
+
+            # Reload PM2
+            # Since PM2 watches the symlink, a reload picks up the new files.
+            pm2 reload $LIVE_LINK/ops/pm2/ecosystem.config.cjs --only agency --update-env
+
+            echo "-- Agency Deployed Successfully! --"
+
+            echo "🎉 Deployed $TAG_NAME Successfully!"
+
+            # Cleanup (Keep last 5 versions)
+            cd /var/www/ecosystem/releases
+            ls -t | tail -n +6 | xargs -r rm -rf
+
+            # Trigger Nitro ISR Cache
+            # curl -f -X POST "${{ secrets.AGENCY_BASE_URL }}/api/sync-isr" -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
