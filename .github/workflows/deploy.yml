@@ -37,4 +37,4 @@ jobs:
             ls -t | tail -n +6 | xargs -r rm -rf
 
             # Trigger Nitro ISR Cache
-            curl -f -X POST "${{ secrets.AGENCY_BASE_URL }}/api/sync-isr" -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
+            curl -f -sS -X POST "${{ secrets.AGENCY_BASE_URL }}/api/sync-isr" -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
