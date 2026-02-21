@@ -19,7 +19,7 @@ jobs:
             RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
             LIVE_LINK="/var/www/ecosystem/current"
 
-            echo "✅ All Build OK. Swapping to $TAG_NAME..."
+            echo "✅ All Build OK. Swapping current symlink to $TAG_NAME..."
             ln -sfn $RELEASE_DIR $LIVE_LINK
 
             echo "-- Studio Deployed Successfully! --"
@@ -37,4 +37,4 @@ jobs:
             ls -t | tail -n +6 | xargs -r rm -rf
 
             # Trigger Nitro ISR Cache
-            # curl -f -X POST "${{ secrets.AGENCY_BASE_URL }}/api/sync-isr" -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
+            curl -f -X POST "${{ secrets.AGENCY_BASE_URL }}/api/sync-isr" -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
