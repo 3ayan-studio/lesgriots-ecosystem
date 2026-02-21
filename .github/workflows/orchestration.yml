@@ -19,6 +19,7 @@ jobs:
   stage-release:
     needs: [check-agency, check-studio]
     uses: ./.github/workflows/stage-release.yml
+    secrets: inherit
 
   # --- PHASE 3: BUILD (Parallel) ---
   build-agency:
