@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { type Project } from '../../types/sanity.types'
+// import { type Project } from '../../types/sanity.types'
 
-const { data } = await useSanityProjects()
-const projects = data.value as Array<Project>
-console.log(projects[0]);
+// const { data } = await useSanityProjects()
+// const projects = data.value as Array<Project>
+// console.log(projects[0]);
 
 </script>
 
