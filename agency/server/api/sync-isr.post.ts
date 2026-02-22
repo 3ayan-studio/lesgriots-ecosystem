@@ -2,9 +2,13 @@ export default defineEventHandler(async (event) => {
     // 1. SECURITY: We reuse your Sanity secret or a dedicated deploy secret
     const authHeader = getHeader(event, 'authorization')
     const secret = process.env.DEPLOY_SECRET
-    if (!secret) throw createError({ statusCode: 500, statusMessage: 'No secret' })
+    if (!secret) {
+        console.error('🚨 DEPLOY_SECRET is not set in environment variables!')
+        throw createError({ statusCode: 500, statusMessage: 'No secret' })
+    }
 
     if (authHeader !== `Bearer ${secret}`) {
+        console.warn('🚨 Unauthorized deployment attempt detected. Invalid or missing secret.')
         throw createError({ statusCode: 401, statusMessage: 'Unauthorized Deployment Request' })
     }
 
