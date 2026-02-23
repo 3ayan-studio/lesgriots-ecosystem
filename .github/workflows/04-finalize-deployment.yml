@@ -1,0 +1,51 @@
+name: "🚀 Deploy & Cleanup"
+on:
+  workflow_call:
+
+jobs:
+  post-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔄 Atomic Swap, Restart & Cleanup
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            TAG_NAME="${{ github.ref_name }}"
+            RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+            LIVE_LINK="/var/www/ecosystem/current"
+
+            echo "=========================================="
+            echo "🚀 EXECUTING ATOMIC DEPLOYMENT"
+            echo "=========================================="
+
+            # --- Atomic Symlink Swap ---
+            echo "🔗 Swapping symlink to: release-$TAG_NAME"
+            ln -sfn $RELEASE_DIR $LIVE_LINK
+
+            # --- Restart PM2 (Agency) ---
+            echo "🔄 Reloading Node.js via PM2..."
+            pm2 reload $LIVE_LINK/ops/pm2/ecosystem.config.cjs --only agency --update-env
+
+            echo "=========================================="
+            echo "🎉 DEPLOYMENT SUCCESSFUL: $TAG_NAME"
+            echo "=========================================="
+
+            # --- Cleanup Old Releases ---
+            echo "🧹 Cleaning up old releases (Keeping last 5)..."
+            cd /var/www/ecosystem/releases
+            ls -t | tail -n +6 | xargs -r rm -rf
+            echo "✅ Cleanup complete."
+
+            # --- Remove .env from apps ---
+            rm -rf $LIVE_LINK/agency/.env
+
+            # --- Trigger ISR Cache Wipe ---
+            echo "🌐 Pinging Nuxt to wipe ISR cache..."
+            curl -f -sS -X POST "${{ secrets.AGENCY_BASE_URL }}/api/sync-isr" -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
+
+            echo "✅ ISR Synchronization Initiated."

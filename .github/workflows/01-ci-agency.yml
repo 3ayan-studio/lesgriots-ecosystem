@@ -1,4 +1,4 @@
-name: "✅ CI: Agency"
+name: "🧪 CI: Agency"
 on:
   workflow_call:
 
@@ -6,17 +6,17 @@ jobs:
   test-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
           cache-dependency-path: agency/package-lock.json
 
-      - name: Install & Build
+      - name: 🏗️ Install & Build (Agency)
         working-directory: ./agency
         env:
           NUXT_SANITY_AGENCY_PROJECT_ID: ${{ secrets.SANITY_AGENCY_PROJECT_ID }}
@@ -27,7 +27,9 @@ jobs:
           NUXT_DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
           NUXT_NITRO_CACHE_DIR: ${{ secrets.AGENCY_NITRO_CACHE_DIR }}
           NUXT_BASE_URL: ${{ secrets.AGENCY_BASE_URL }}
-
         run: |
+          echo "📦 Installing Dependencies..."
           npm ci --legacy-peer-deps
+          echo "🔨 Compiling Nuxt App..."
           npm run build
+          echo "✅ Agency Build Successful!"

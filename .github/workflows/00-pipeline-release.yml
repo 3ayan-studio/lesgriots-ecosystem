@@ -1,0 +1,53 @@
+name: "🚀 Deployment Orchestration"
+
+on:
+  push:
+    tags:
+      - "v*" # Triggers on v1.0, v20.15.10, etc. (NO SLASHES, ONLY INTEGERS & DOTS)
+
+jobs:
+  # ==========================================
+  # PHASE 1: CI / TEST (Parallel)
+  # ==========================================
+  check-agency:
+    name: "🧪 Test Build: Agency"
+    uses: ./.github/workflows/check-agency.yml
+    secrets: inherit
+
+  check-studio:
+    name: "🧪 Test Build: Studio"
+    uses: ./.github/workflows/check-studio.yml
+    secrets: inherit
+
+  # ==========================================
+  # PHASE 2: STAGE RELEASE (Sequential)
+  # ==========================================
+  stage-release:
+    name: "📦 Stage Release"
+    needs: [check-agency, check-studio]
+    uses: ./.github/workflows/stage-release.yml
+    secrets: inherit
+
+  # ==========================================
+  # PHASE 3: BUILD CODEBASE (Parallel)
+  # ==========================================
+  build-agency:
+    name: "🏗️ Build: Agency"
+    needs: stage-release
+    uses: ./.github/workflows/build-agency.yml
+    secrets: inherit
+
+  build-studio:
+    name: "🏗️ Build: Studio"
+    needs: stage-release
+    uses: ./.github/workflows/build-studio.yml
+    secrets: inherit
+
+  # ==========================================
+  # PHASE 4: ATOMIC SWAP & CLEANUP
+  # ==========================================
+  deploy:
+    name: "🚀 Deploy & Clean"
+    needs: [build-agency, build-studio]
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

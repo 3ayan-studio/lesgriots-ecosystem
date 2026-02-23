@@ -1,4 +1,4 @@
-name: "🚀 CD: Studio (Atomic)"
+name: "🏗️ Build: Studio (VPS)"
 on:
   workflow_call:
 
@@ -6,8 +6,8 @@ jobs:
   deploy-vps:
     runs-on: ubuntu-latest
     steps:
-      - name: Atomic Deploy
-        uses: appleboy/ssh-action@master
+      - name: 🏗️ Prepare and Build Studio
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
@@ -15,28 +15,25 @@ jobs:
           script: |
             set -e
 
-            # --- CONFIGURATION ---
-            # We use the TAG name for the folder (e.g., release-v1.0.0)
-            # This makes it very easy to rollback manually if needed
             TAG_NAME="${{ github.ref_name }}"
             RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
 
-            echo "🚀 Deploying Studio Tag: $TAG_NAME"
+            echo "=========================================="
+            echo "🏗️ BUILDING STUDIO: $TAG_NAME"
+            echo "=========================================="
 
-            # Build
             cd $RELEASE_DIR/studio
 
-            # Create .env
+            echo "📝 Injecting Environment Variables (.env)..."
             echo "SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
             echo "SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
             echo "SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
             echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
 
-            echo "📦 Installing..."
+            echo "📦 Running npm ci (Studio)..."
             npm ci --legacy-peer-deps
 
-            echo "🔨 Building..."
+            echo "🔨 Running Sanity Build..."
             npm run build
-            # (This creates a 'dist' folder inside 'studio')
 
-            # Atomic Swap moved to post-deploy.yml
+            echo "✅ Studio Build Complete!"
