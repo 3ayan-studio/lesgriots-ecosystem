@@ -1,0 +1,53 @@
+name: "🚀 Deployment Orchestration"
+
+on:
+  push:
+    tags:
+      - "v*" # Triggers on v1.0, v20.15.10, etc. (NO SLASHES, ONLY INTEGERS & DOTS)
+
+jobs:
+  # ==========================================
+  # PHASE 1: CI / TEST (Parallel)
+  # ==========================================
+  ci-agency:
+    name: "🧪 Test Build: Agency"
+    uses: ./.github/workflows/01-ci-agency.yml
+    secrets: inherit
+
+  ci-studio:
+    name: "🧪 Test Build: Studio"
+    uses: ./.github/workflows/01-ci-studio.yml
+    secrets: inherit
+
+  # ==========================================
+  # PHASE 2: STAGE RELEASE (Sequential)
+  # ==========================================
+  stage-release:
+    name: "📦 Stage Release"
+    needs: [ci-agency, ci-studio]
+    uses: ./.github/workflows/02-stage-release.yml
+    secrets: inherit
+
+  # ==========================================
+  # PHASE 3: BUILD CODEBASE (Parallel)
+  # ==========================================
+  build-agency:
+    name: "🏗️ Build: Agency"
+    needs: stage-release
+    uses: ./.github/workflows/03-build-agency.yml
+    secrets: inherit
+
+  build-studio:
+    name: "🏗️ Build: Studio"
+    needs: stage-release
+    uses: ./.github/workflows/03-build-studio.yml
+    secrets: inherit
+
+  # ==========================================
+  # PHASE 4: ATOMIC SWAP & CLEANUP
+  # ==========================================
+  finalize-deployment:
+    name: "🚀 Deploy & Clean"
+    needs: [build-agency, build-studio]
+    uses: ./.github/workflows/04-finalize-deployment.yml
+    secrets: inherit
