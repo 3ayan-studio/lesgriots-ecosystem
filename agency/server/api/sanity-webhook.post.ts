@@ -2,7 +2,6 @@ import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event)
-    // const secret = process.env.NUXT_SANITY_REVALIDATE_SECRET
     const secret = config.sanityAgencyRevalidateSecret
     if (!secret) throw createError({ statusCode: 500, statusMessage: 'No secret' })
 
