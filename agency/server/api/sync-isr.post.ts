@@ -1,7 +1,8 @@
 export default defineEventHandler(async (event) => {
-    // 1. SECURITY: We reuse your Sanity secret or a dedicated deploy secret
+    const config = useRuntimeConfig(event)
+
+    const secret = config.deploySecret
     const authHeader = getHeader(event, 'authorization')
-    const secret = process.env.NUXT_DEPLOY_SECRET
     if (!secret) {
         console.error('🚨 DEPLOY_SECRET is not set in environment variables!')
         throw createError({ statusCode: 500, statusMessage: 'No secret' })

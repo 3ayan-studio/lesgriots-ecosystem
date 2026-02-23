@@ -52,6 +52,17 @@ export default defineNuxtConfig({
         }
     },
 
+    runtimeConfig: {
+        sanityAgencyProjectId: '',
+        sanityAgencyDataset: '',
+        sanityAgencyStudioAppId: '',
+        sanityAgencyApiVersion: '',
+        sanityAgencyRevalidateSecret: '',
+        nitroCacheDir: '',
+        deploySecret: '',
+        baseUrl: ''
+    },
+
     nitro: {
         storage: {
             'cache': {
