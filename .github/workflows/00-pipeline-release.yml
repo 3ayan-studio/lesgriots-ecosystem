@@ -9,14 +9,14 @@ jobs:
   # ==========================================
   # PHASE 1: CI / TEST (Parallel)
   # ==========================================
-  check-agency:
+  ci-agency:
     name: "🧪 Test Build: Agency"
-    uses: ./.github/workflows/check-agency.yml
+    uses: ./.github/workflows/01-ci-agency.yml
     secrets: inherit
 
-  check-studio:
+  ci-studio:
     name: "🧪 Test Build: Studio"
-    uses: ./.github/workflows/check-studio.yml
+    uses: ./.github/workflows/01-ci-studio.yml
     secrets: inherit
 
   # ==========================================
@@ -24,8 +24,8 @@ jobs:
   # ==========================================
   stage-release:
     name: "📦 Stage Release"
-    needs: [check-agency, check-studio]
-    uses: ./.github/workflows/stage-release.yml
+    needs: [ci-agency, ci-studio]
+    uses: ./.github/workflows/02-stage-release.yml
     secrets: inherit
 
   # ==========================================
@@ -34,20 +34,20 @@ jobs:
   build-agency:
     name: "🏗️ Build: Agency"
     needs: stage-release
-    uses: ./.github/workflows/build-agency.yml
+    uses: ./.github/workflows/03-build-agency.yml
     secrets: inherit
 
   build-studio:
     name: "🏗️ Build: Studio"
     needs: stage-release
-    uses: ./.github/workflows/build-studio.yml
+    uses: ./.github/workflows/03-build-studio.yml
     secrets: inherit
 
   # ==========================================
   # PHASE 4: ATOMIC SWAP & CLEANUP
   # ==========================================
-  deploy:
+  finalize-deployment:
     name: "🚀 Deploy & Clean"
     needs: [build-agency, build-studio]
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/04-finalize-deployment.yml
     secrets: inherit
