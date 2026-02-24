@@ -1,10 +1,10 @@
 <template>
     <div>
-        <button v-for="locale in locales" @click="setLocale(locale.code)">
-            {{ locale.name }}
-        </button>
-        <h1>{{ $t('title') }}</h1>
-        <NuxtLinkLocale to="/">{{ $t('home') }}</NuxtLinkLocale>
+        <p v-for="locale in locales">
+            <button @click="setLocale(locale.code)">{{ locale.name }}</button>
+        </p>
+        <p>{{ $t('pages.home.description') }}</p>
+        <NuxtLinkLocale to="/">{{ $t('pages.home.title') }}</NuxtLinkLocale>
     </div>
 </template>
 

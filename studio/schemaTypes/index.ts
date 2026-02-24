@@ -1,5 +1,10 @@
-import { projectType } from "./project";
+import { localeString, localeText } from "./objects/localeTypes";
+import { project } from "./project";
+import { siteSettings } from "./siteSettings";
 
 export const schemaTypes = [
-    projectType
+    localeString,
+    localeText,
+    siteSettings,
+    project
 ]

@@ -1,4 +1,20 @@
 {
-    "title": "Oui.",
-    "home": "Accueil"
+    "pages": {
+        "home": {
+            "title": "Accueil",
+            "description": "Bienvenue chez Les Griots Studio, où la créativité rencontre l'innovation. Explorez notre portfolio de projets et découvrez comment nous donnons vie aux idées."
+        },
+        "work": {
+            "title": "Projets",
+            "description": "Découvrez notre gamme diversifiée de projets qui mettent en valeur notre expertise en design, développement et storytelling. Chaque projet témoigne de notre engagement envers l'excellence et la créativité."
+        },
+        "about": {
+            "title": "À propos de nous",
+            "description": "En savoir plus sur Les Griots Studio, notre mission, nos valeurs et l'équipe talentueuse derrière nos projets innovants. Nous sommes passionnés par la création d'expériences impactantes à travers le design et la technologie."
+        },
+        "ecosystem": {
+            "title": "Écosystème",
+            "description": "Explorez l'écosystème vibrant de Les Griots Studio, où nous collaborons avec des partenaires, clients et communautés pour créer des connexions significatives et stimuler l'innovation dans l'industrie créative."
+        }
+    }
 }

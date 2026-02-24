@@ -1,4 +1,6 @@
-const DEFAULT_LANG = 'en'
+import { baseLanguage } from "../schemaTypes/objects/localeTypes"
+
+const DEFAULT_LANG = baseLanguage?.code!
 
 export const getPreview = (selection: any) => {
     // if a property is an array of localized strings, we want to get the string for the default language, otherwise we just return the first language
@@ -18,6 +20,11 @@ export const getPreview = (selection: any) => {
     return preview
 }
 
-export const getTitlePreview = (localizedTitle: any) => {
-    return localizedTitle?.find((item: any) => item._key === DEFAULT_LANG && item.value)?.value || localizedTitle?.find((item: any) => item.value)?.value || 'Untitled'
+export const getArrayTitlePreview = (localizedArrayTitle: any) => {
+    return localizedArrayTitle?.find((item: any) => item._key === DEFAULT_LANG && item.value)?.value || localizedArrayTitle?.find((item: any) => item.value)?.value || 'Untitled'
+}
+
+export const getObjectTitlePreview = (localizedObjectTitle: any) => {
+    if (!localizedObjectTitle || typeof localizedObjectTitle !== 'object') return 'Untitled'
+    return localizedObjectTitle?.[DEFAULT_LANG] || Object.values(localizedObjectTitle).find((value => value != 'localeString'))
 }

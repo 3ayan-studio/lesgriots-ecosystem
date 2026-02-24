@@ -249,7 +249,7 @@ onMounted(() => {
                     <ul class="list">
                         <li v-for="materiel in formation.informations_pratiques.materiels"> {{ materiel }}</li>
                     </ul>
-                    <strong>Accéssibilité aux personnes en situation de handicap</strong>
+                    <strong>Accessibilité aux personnes en situation de handicap</strong>
                     <p>{{ formation.informations_pratiques.accessibilite }}</p>
                 </div>
             </div>

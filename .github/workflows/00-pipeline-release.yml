@@ -10,12 +10,12 @@ jobs:
   # PHASE 1: CI / TEST (Parallel)
   # ==========================================
   ci-agency:
-    name: "🧪 Test Build: Agency"
+    name: "🧪 Test: Agency"
     uses: ./.github/workflows/01-ci-agency.yml
     secrets: inherit
 
   ci-studio:
-    name: "🧪 Test Build: Studio"
+    name: "🧪 Test: Studio"
     uses: ./.github/workflows/01-ci-studio.yml
     secrets: inherit
 

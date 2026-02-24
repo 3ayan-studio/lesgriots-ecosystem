@@ -19,14 +19,66 @@ export type Project = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: InternationalizedArrayString;
+  title?: LocaleString;
 };
 
-export type InternationalizedArrayString = Array<
-  {
+export type LocaleString = {
+  _type: "localeString";
+  en?: string;
+  fr?: string;
+};
+
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type SiteSettings = {
+  _id: string;
+  _type: "siteSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  seoTitle?: LocaleString;
+  seoDescription?: LocaleText;
+  ogImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  socials?: Array<{
+    platform?: "Instagram" | "Twitter" | "LinkedIn";
+    url?: string;
     _key: string;
-  } & InternationalizedArrayStringValue
->;
+  }>;
+  copyrightText?: LocaleText;
+};
+
+export type LocaleText = {
+  _type: "localeText";
+  en?: string;
+  fr?: string;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
 
 export type InternationalizedArrayTextValue = {
   _type: "internationalizedArrayTextValue";
@@ -42,6 +94,12 @@ export type InternationalizedArrayText = Array<
   {
     _key: string;
   } & InternationalizedArrayTextValue
+>;
+
+export type InternationalizedArrayString = Array<
+  {
+    _key: string;
+  } & InternationalizedArrayStringValue
 >;
 
 export type SanityImagePaletteSwatch = {
@@ -80,22 +138,6 @@ export type SanityImageMetadata = {
   thumbHash?: string;
   hasAlpha?: boolean;
   isOpaque?: boolean;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
 };
 
 export type SanityFileAsset = {
@@ -165,16 +207,20 @@ export type Slug = {
 
 export type AllSanitySchemaTypes =
   | Project
-  | InternationalizedArrayString
+  | LocaleString
+  | SanityImageAssetReference
+  | SiteSettings
+  | LocaleText
+  | SanityImageCrop
+  | SanityImageHotspot
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
   | InternationalizedArrayText
+  | InternationalizedArrayString
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
   | SanityImageMetadata
-  | SanityImageHotspot
-  | SanityImageCrop
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset

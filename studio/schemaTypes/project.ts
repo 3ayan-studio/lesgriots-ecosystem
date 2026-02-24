@@ -1,16 +1,22 @@
 import { defineField, defineType } from 'sanity'
-import { getTitlePreview } from '../utils/preview'
+import { getObjectTitlePreview } from '../utils/preview'
 
-export const projectType = defineType({
+export const project = defineType({
     name: 'project',
     title: 'Project',
     type: 'document',
     fields: [
         defineField({
+            title: 'Title',
             name: 'title',
-            type: 'internationalizedArrayString',
+            type: 'localeString',
             validation: (rule) => rule.required(),
         }),
+        // defineField({
+        //     name: 'title',
+        //     type: 'internationalizedArrayString',
+        //     validation: (rule) => rule.required(),
+        // }),
         // defineField({
         //     name: 'slug',
         //     type: 'slug',
@@ -46,7 +52,7 @@ export const projectType = defineType({
         },
         prepare(selection) {
             return {
-                title: getTitlePreview(selection.title)
+                title: getObjectTitlePreview(selection.title)
             }
         }
     }

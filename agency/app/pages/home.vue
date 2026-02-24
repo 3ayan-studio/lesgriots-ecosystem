@@ -1,10 +1,10 @@
 <script setup lang="ts">
-// import { type Project } from '../../types/sanity.types'
+// const { t } = useI18n()
 
-// const { data } = await useSanityProjects()
-// const projects = data.value as Array<Project>
-// console.log(projects[0]);
-
+// useSeoMeta({
+// title: () => t('home.pageTitle'),
+// description: () => t('pages.home.description'),
+// })
 </script>
 
 <template>

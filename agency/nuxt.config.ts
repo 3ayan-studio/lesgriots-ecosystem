@@ -3,6 +3,29 @@ export default defineNuxtConfig({
     future: {
         compatibilityVersion: 4,
     },
+    modules: [
+        '@nuxtjs/tailwindcss',
+        '@nuxtjs/i18n',
+        '@nuxtjs/seo',
+        '@nuxtjs/sanity',
+        '@nuxt/image'
+    ],
+    imports: {
+        dirs: ['composables/**']
+    },
+    typescript: {
+        typeCheck: true
+    },
+    runtimeConfig: {
+        sanityAgencyProjectId: '',
+        sanityAgencyDataset: '',
+        sanityAgencyStudioAppId: '',
+        sanityAgencyApiVersion: '',
+        sanityAgencyRevalidateSecret: '',
+        nitroCacheDir: '',
+        deploySecret: '',
+        baseUrl: ''
+    },
 
     $development: {
         nitro: {
@@ -52,53 +75,25 @@ export default defineNuxtConfig({
         }
     },
 
-    runtimeConfig: {
-        sanityAgencyProjectId: '',
-        sanityAgencyDataset: '',
-        sanityAgencyStudioAppId: '',
-        sanityAgencyApiVersion: '',
-        sanityAgencyRevalidateSecret: '',
-        nitroCacheDir: '',
-        deploySecret: '',
-        baseUrl: ''
-    },
-
     nitro: {
         storage: {
             'cache': {
                 driver: 'fs',
-                // base: process.env.NITRO_CACHE_DIR || './.data/cache',
             }
         }
     },
 
     app: {
         head: {
-            title: 'Lesgriotsxstudio',
-            htmlAttrs: {
-                lang: 'en',
-            },
             link: [
                 { rel: 'icon', type: 'image/x-icon', href: '/images/logo.png' },
             ],
+            meta: [
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { name: 'format-detection', content: 'telephone=no' },
+            ],
         },
     },
-
-    imports: {
-        dirs: ['composables/**']
-    },
-
-    typescript: {
-        typeCheck: true
-    },
-
-    modules: [
-        '@nuxtjs/tailwindcss',
-        '@nuxtjs/seo',
-        '@nuxtjs/i18n',
-        '@nuxtjs/sanity',
-        '@nuxt/image'
-    ],
 
     sanity: {
         projectId: process.env.NUXT_SANITY_AGENCY_PROJECT_ID!,
@@ -109,29 +104,20 @@ export default defineNuxtConfig({
 
     // SEO Config
     site: {
-        // url: process.env.NUXT_BASE_URL! || 'http://localhost:3000',
-        name: 'Lesgriotsxstudio',
-        defaultLocale: 'en',
+        name: 'Les Griots Studio',
+        description: ''
     },
 
     i18n: {
-        // baseUrl: process.env.NUXT_BASE_URL! || 'http://localhost:3000',
         defaultLocale: 'en',
         locales: [
-            { code: 'en', iso: 'en-US', file: 'en.json', name: 'English' },
-            { code: 'fr', iso: 'fr-FR', file: 'fr.json', name: 'Français' }
+            { code: 'en', language: 'en-US', file: 'en.json', name: 'English' },
+            { code: 'fr', language: 'fr-FR', file: 'fr.json', name: 'Français' }
         ],
         strategy: 'prefix_except_default', // Default locale without prefix, others with prefix
         detectBrowserLanguage: {
             useCookie: true,
-            cookieKey: 'i18n_redirected',
-
-            // redirectOn: 'root',
-            // alwaysRedirect: false,
-
-            // // temporary
-            // redirectOn: 'all', // recommended
-            // alwaysRedirect: true
+            cookieKey: 'i18n_redirected'
         }
     },
 

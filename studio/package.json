@@ -8,8 +8,6 @@
         "dev": "sanity dev",
         "start": "sanity start",
         "build": "sanity build",
-        "deploy": "sanity deploy",
-        "deploy-graphql": "sanity graphql deploy",
         "extypes": "npx sanity schema extract --path ../agency/app/utils/sanity-schemas.json",
         "gentypes": "npx sanity typegen generate"
     },

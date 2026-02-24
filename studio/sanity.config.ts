@@ -12,7 +12,25 @@ export default defineConfig({
     dataset: process.env.SANITY_STUDIO_AGENCY_DATASET!,
 
     plugins: [
-        structureTool(),
+        structureTool({
+            structure: (S) =>
+                S.list()
+                    .title('Content')
+                    .items([
+                        S.listItem()
+                            .title('⚙️ Website Settings')
+                            .id('siteSettings')
+                            .child(
+                                S.document()
+                                    .schemaType('siteSettings')
+                                    .documentId('siteSettings')
+                            ),
+                        S.divider(),
+                        ...S.documentTypeListItems().filter(
+                            (listItem) => !['siteSettings'].includes(listItem.getId()!)
+                        ),
+                    ]),
+        }),
         visionTool(),
         internationalizedArray({
             languages: [

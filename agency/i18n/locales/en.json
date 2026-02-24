@@ -1,4 +1,20 @@
 {
-    "title": "Yes.",
-    "home": "Home"
+    "pages": {
+        "home": {
+            "title": "Home",
+            "description": "Welcome to Les Griots Studio, where creativity meets innovation. Explore our portfolio of projects and discover how we bring ideas to life."
+        },
+        "work": {
+            "title": "Work",
+            "description": "Discover our diverse range of projects that showcase our expertise in design, development, and storytelling. Each project is a testament to our commitment to excellence and creativity."
+        },
+        "about": {
+            "title": "About Us",
+            "description": "Learn more about Les Griots Studio, our mission, values, and the talented team behind our innovative projects. We are passionate about creating impactful experiences through design and technology."
+        },
+        "ecosystem": {
+            "title": "Ecosystem",
+            "description": "Explore the vibrant ecosystem of Les Griots Studio, where we collaborate with partners, clients, and communities to create meaningful connections and drive innovation in the creative industry."
+        }
+    }
 }
