@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Participants } from '../../../types/formation'
+import type { Participants } from '../../../types/formation'
 defineProps<{
     prix: number,
     lieu: string,
@@ -29,8 +29,8 @@ defineProps<{
             <p>{{ lieu }} </p>
         </div>
         <div class="btn-list">
-            <TempButtonLink label="Télécharger le Programme" class="dark" :link="pdf" />
-            <TempButtonLink label="Je m'inscris" class="light" :link="inscription" />
+            <TempButtonLink label="Télécharger le Programme" custom-class="dark" :link="pdf" />
+            <TempButtonLink label="Je m'inscris" custom-class="light" :link="inscription" />
         </div>
     </div>
 </template>

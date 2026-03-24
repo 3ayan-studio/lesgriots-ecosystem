@@ -1,64 +1,70 @@
 export default defineNuxtConfig({
-    compatibilityDate: '2026-02-22',
-    future: {
-        compatibilityVersion: 4,
-    },
+    compatibilityDate: "2026-02-22",
+    future: { compatibilityVersion: 4 },
     modules: [
-        '@nuxtjs/tailwindcss',
-        '@nuxtjs/i18n',
-        '@nuxtjs/seo',
-        '@nuxtjs/sanity',
-        '@nuxt/image'
+        "@nuxtjs/i18n",
+        "@nuxtjs/seo",
+        "@nuxtjs/sanity",
+        "@nuxt/image",
+        "@nuxt/eslint",
+        "@nuxtjs/tailwindcss",
     ],
-    imports: {
-        dirs: ['composables/**']
-    },
-    typescript: {
-        typeCheck: true
-    },
     runtimeConfig: {
-        sanityAgencyProjectId: '',
-        sanityAgencyDataset: '',
-        sanityAgencyStudioAppId: '',
-        sanityAgencyApiVersion: '',
-        sanityAgencyRevalidateSecret: '',
-        nitroCacheDir: '',
-        deploySecret: '',
-        baseUrl: ''
+        // PREFIXED WITH NUXT_
+        sanityAgencyProjectId: "",
+        sanityAgencyDataset: "",
+        sanityAgencyStudioAppId: "",
+        sanityAgencyApiVersion: "",
+        sanityAgencyRevalidateSecret: "",
+        nitroCacheDir: "",
+        deploySecret: "",
+        baseUrl: "",
+        cloudflareCachePurgeToken: "",
+        cloudflareZoneId: "",
+    },
+    imports: { dirs: ["composables/**"] },
+    components: [{ path: "~/components", pathPrefix: true }],
+    vite: {
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    additionalData:
+                        '@use "@/assets/scss/_variables.scss" as *;',
+                },
+            },
+        },
     },
 
     $development: {
         nitro: {
-            storage: {
-                'cache': {
-                    base: './.data/cache-dev',
-                }
-            }
+            devStorage: {
+                cache: {
+                    driver: "fs",
+                    base: "./.data/cache-dev",
+                },
+            },
         },
-        site: {
-            url: 'http://localhost:3000',
-        },
+        site: { url: "http://localhost:3000" },
         i18n: {
-            baseUrl: 'http://localhost:3000',
-            detectBrowserLanguage: {
-                // temporary
-                redirectOn: 'all', // recommended
-                alwaysRedirect: true
-            }
-        }
+            baseUrl: "http://localhost:3000",
+            // detectBrowserLanguage: {
+            //     // temporary
+            //     redirectOn: 'all', // recommended
+            //     alwaysRedirect: true
+            // }
+        },
     },
 
     $production: {
         nitro: {
             storage: {
-                'cache': {
-                    base: process.env.NUXT_NITRO_CACHE_DIR
-                }
-            }
+                cache: {
+                    driver: "fs",
+                    base: process.env.NUXT_NITRO_CACHE_DIR,
+                },
+            },
         },
-        site: {
-            url: process.env.NUXT_BASE_URL!
-        },
+        site: { url: process.env.NUXT_BASE_URL! },
         i18n: {
             baseUrl: process.env.NUXT_BASE_URL!,
 
@@ -67,30 +73,29 @@ export default defineNuxtConfig({
             //     alwaysRedirect: false,
             // }
 
-            detectBrowserLanguage: {
-                // temporary
-                redirectOn: 'all', // recommended
-                alwaysRedirect: true
-            }
-        }
+            // detectBrowserLanguage: {
+            //     // temporary
+            //     redirectOn: 'all', // recommended
+            //     alwaysRedirect: true
+            // }
+        },
     },
 
     nitro: {
-        storage: {
-            'cache': {
-                driver: 'fs',
-            }
+        prerender: {
+            crawlLinks: true,
+            routes: ["/"]
         }
     },
 
     app: {
         head: {
             link: [
-                { rel: 'icon', type: 'image/x-icon', href: '/images/logo.png' },
+                { rel: "icon", type: "image/x-icon", href: "/images/logo.png" },
             ],
             meta: [
-                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-                { name: 'format-detection', content: 'telephone=no' },
+                { name: "viewport", content: "width=device-width, initial-scale=1" },
+                { name: "format-detection", content: "telephone=no" },
             ],
         },
     },
@@ -104,25 +109,70 @@ export default defineNuxtConfig({
 
     // SEO Config
     site: {
-        name: 'Les Griots Studio',
-        description: ''
+        name: "Les Griots Studio",
+        description: "",
     },
 
     i18n: {
-        defaultLocale: 'en',
+        defaultLocale: "en",
         locales: [
-            { code: 'en', language: 'en-US', file: 'en.json', name: 'English' },
-            { code: 'fr', language: 'fr-FR', file: 'fr.json', name: 'Français' }
+            { code: "en", language: "en-US", file: "en.json", name: "English" },
+            { code: "fr", language: "fr-FR", file: "fr.json", name: "Français" },
         ],
-        strategy: 'prefix_except_default', // Default locale without prefix, others with prefix
+        strategy: "prefix_except_default", // Default locale without prefix, others with prefix
         detectBrowserLanguage: {
             useCookie: true,
-            cookieKey: 'i18n_redirected'
-        }
+            cookieKey: "i18n_redirected",
+            redirectOn: "root",
+            alwaysRedirect: false,
+        },
+        customRoutes: "config",
+        pages: {
+            index: {
+                en: "/",
+                fr: "/",
+            },
+            formation: {
+                en: "/course",
+                fr: "/formation",
+            },
+        },
     },
 
-    // ISR & Caching (Nitro Engine)
+    // ISR Caching
     routeRules: {
-        // '/': { redirect: { to: '/home', statusCode: 302 } },
-    }
-})
+        "/**": {
+            swr: true,
+            headers: {
+                'Cache-Control': 's-maxage=3600, stale-while-revalidate'
+            }
+        },
+
+        "/api/**": {
+            swr: false,
+            headers: {
+                'Cache-Control': 'no-cache'
+            }
+        }
+        
+        // // home
+        // "/": { swr: true, },
+        // "/fr": { swr: true, },
+
+        // // formation
+        // "/formation": { swr: true, },
+        // "/fr/formation": { swr: true, },
+
+        // // work listing
+        // "/work": { swr: true, },
+        // "/fr/work": { swr: true, },
+
+        // // work detail (dynamic)
+        // "/work/**": { swr: true, },
+        // "/fr/work/**": { swr: true, },
+
+        // // about
+        // "/about": { swr: true, },
+        // "/fr/about": { swr: true, },
+    },
+});

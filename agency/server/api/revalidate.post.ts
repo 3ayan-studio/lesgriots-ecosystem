@@ -1,22 +1,27 @@
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig(event)
+    const config = useRuntimeConfig(event);
 
-    const secret = config.deploySecret
-    const authHeader = getHeader(event, 'authorization')
+    const secret = config.deploySecret;
+    const authHeader = getHeader(event, "authorization");
     if (!secret) {
-        console.error('🚨 DEPLOY_SECRET is not set in environment variables!')
-        throw createError({ statusCode: 500, statusMessage: 'No secret' })
+        console.error("🚨 DEPLOY_SECRET is not set in environment variables!");
+        throw createError({ statusCode: 500, statusMessage: "No secret" });
     }
 
     if (authHeader !== `Bearer ${secret}`) {
-        console.warn('🚨 Unauthorized deployment attempt detected. Invalid or missing secret.')
-        throw createError({ statusCode: 401, statusMessage: 'Unauthorized Deployment Request' })
+        console.warn(
+            "🚨 Unauthorized deployment attempt detected. Invalid or missing secret."
+        );
+        throw createError({
+            statusCode: 401,
+            statusMessage: "Unauthorized Deployment Request",
+        });
     }
 
     // 2. CLEAR THE CACHE
     // const storage = useStorage('cache')
     // await storage.clear()
-    console.log('🧹 Cache fully cleared for new deployment.')
+    console.log("🧹 Cache fully cleared for new deployment.");
 
     // 3. IDENTIFY ALL ROUTES TO WARM
     // Core static routes:
@@ -49,7 +54,7 @@ export default defineEventHandler(async (event) => {
 
     return {
         success: true,
-        message: 'Cache wiped. Background rebuild initiated for new release.',
+        message: "Cache wiped. Background rebuild initiated for new release.",
         // warmed_routes_count: allRoutesToWarm.length
-    }
-})
+    };
+});

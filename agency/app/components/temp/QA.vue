@@ -1,13 +1,13 @@
 <script setup lang='ts'>
-import { type QA } from '../../../types/formation'
-import { Transition } from 'vue'
+import type { QA } from '../../../types/formation'
+// import { Transition } from 'vue'
 defineProps<{
     qa: QA;
 }>()
 const isActive = ref(false)
 </script>
 <template>
-    <div @click="isActive = !isActive" class="question">
+    <div class="question" @click="isActive = !isActive">
         <div class="question-title">
             <p> {{ qa.question }}</p>
             <TempChevron :class="{ rotate: isActive }" />
@@ -16,10 +16,10 @@ const isActive = ref(false)
             <div v-if="isActive" class="question-content">
                 <p>{{ qa.reponse }}</p>
                 <ul v-if="qa.list" class="list">
-                    <li v-for="el in qa.list"> {{ el }}</li>
+                    <li v-for="(el, index) in qa.list" :key="index"> {{ el }}</li>
                 </ul>
                 <ol v-if="qa.steps">
-                    <li v-for="step in qa.steps"> {{ step }}</li>
+                    <li v-for="(step, index) in qa.steps" :key="index"> {{ step }}</li>
                 </ol>
             </div>
         </Transition>

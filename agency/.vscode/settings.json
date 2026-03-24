@@ -1,0 +1,24 @@
+{
+    // Keep Prettier as a fallback for things ESLint doesn't format (like JSON or Markdown)
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    // 1. Tell VS Code to run ESLint's auto-fix every time you save
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    // 2. Hand control of Vue files over to ESLint
+    "[vue]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": false // Turn this off so Prettier/Volar doesn't run after ESLint!
+    },
+    // 3. Hand control of TypeScript files over to ESLint
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": false
+    },
+    // 4. Leave SCSS to Prettier (since ESLint is bad at formatting CSS)
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

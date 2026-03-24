@@ -1,36 +1,37 @@
 name: "📦 Stage Release Codebase"
 on:
-  workflow_call:
+    workflow_call:
 
 jobs:
-  prepare-vps:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Clone Repository to VPS
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            set -e
+    prepare-vps:
+        runs-on: ubuntu-latest
+        environment: ${{ startsWith(github.ref_name, 'staging-') && 'staging' || 'production' }}
+        steps:
+            - name: 📥 Clone Repository to VPS
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  username: ${{ secrets.VPS_USERNAME }}
+                  key: ${{ secrets.VPS_SSH_KEY }}
+                  script: |
+                      set -e
 
-            TAG_NAME="${{ github.ref_name }}"
-            RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
-            REPO_URL="git@github.com:${{ github.repository }}.git"
+                      TAG_NAME="${{ github.ref_name }}"
+                      RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+                      REPO_URL="git@github.com:${{ github.repository }}.git"
 
-            echo "=========================================="
-            echo "📦 STAGING RELEASE: $TAG_NAME"
-            echo "=========================================="
+                      echo "=========================================="
+                      echo "📦 STAGING RELEASE: $TAG_NAME"
+                      echo "=========================================="
 
-            # Ensure base directory exists
-            mkdir -p /var/www/ecosystem/releases
+                      # Ensure base directory exists
+                      mkdir -p /var/www/ecosystem/releases
 
-            echo "📥 Cloning Repository (Depth 1)..."
-            git clone --branch $TAG_NAME --depth 1 $REPO_URL $RELEASE_DIR
+                      echo "📥 Cloning Repository (Depth 1)..."
+                      git clone --branch $TAG_NAME --depth 1 $REPO_URL $RELEASE_DIR
 
-            # Space Optimization
-            echo "🧹 Removing .git folder to save space..."
-            rm -rf $RELEASE_DIR/.git
+                      # Space Optimization
+                      echo "🧹 Removing .git folder to save space..."
+                      rm -rf $RELEASE_DIR/.git
 
-            echo "✅ Directory setup complete at: $RELEASE_DIR"
+                      echo "✅ Directory setup complete at: $RELEASE_DIR"

@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import { type SiteSettings } from '../types/sanity.types'
-
-const { locale } = useI18n()
-// const { data: siteSettings } = await useSanitySiteSettings()
-// provide('siteSettings', siteSettings)
-
-// console.log(siteSettings.value)
-const { data: projects } = await useSanityProjects()
-console.log(projects.value)
+const { locale, t } = useI18n()
 
 const i18nHead = useLocaleHead({
     dir: true,
@@ -23,6 +15,20 @@ useHead(() => ({
     link: i18nHead.value.link,
     meta: i18nHead.value.meta
 }))
+
+const { data: siteSettings } = useSanitySiteSettings()
+provide('siteSettings', siteSettings)
+
+useSeoMeta({
+    titleTemplate: (titleChunk) => {
+        const seoTitle = siteSettings.value?.seoTitle?.[locale.value] || t('site.title')
+        return titleChunk ? `${titleChunk} - ${seoTitle}` : seoTitle
+    },
+    ogTitle: siteSettings.value?.seoTitle?.[locale.value] || t('site.ogTitle'),
+    description: siteSettings.value?.seoDescription?.[locale.value] || t('site.description'),
+    ogDescription: siteSettings.value?.seoDescription?.[locale.value] || t('site.ogDescription'),
+    // ogImage
+})
 </script>
 
 <template>

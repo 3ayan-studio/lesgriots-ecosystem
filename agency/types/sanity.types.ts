@@ -14,217 +14,272 @@
 
 // Source: ../agency/app/utils/sanity-schemas.json
 export type Project = {
-  _id: string;
-  _type: "project";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: LocaleString;
+    _id: string;
+    _type: "project";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: LocaleString;
 };
 
 export type LocaleString = {
-  _type: "localeString";
-  en?: string;
-  fr?: string;
+    _type: "localeString";
+    en?: string;
+    fr?: string;
 };
 
 export type SanityImageAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
 export type SiteSettings = {
-  _id: string;
-  _type: "siteSettings";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  seoTitle?: LocaleString;
-  seoDescription?: LocaleText;
-  ogImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  socials?: Array<{
-    platform?: "Instagram" | "Twitter" | "LinkedIn";
-    url?: string;
-    _key: string;
-  }>;
-  copyrightText?: LocaleText;
+    _id: string;
+    _type: "siteSettings";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    seoTitle?: LocaleString;
+    seoDescription?: LocaleText;
+    ogImage?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+    };
+    socials?: Array<{
+        platform?: "Instagram" | "Twitter" | "LinkedIn";
+        url?: string;
+        _key: string;
+    }>;
+    copyrightText?: LocaleText;
 };
 
 export type LocaleText = {
-  _type: "localeText";
-  en?: string;
-  fr?: string;
+    _type: "localeText";
+    en?: string;
+    fr?: string;
 };
 
 export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+    _type: "sanity.imageCrop";
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
 };
 
 export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
+    _type: "sanity.imageHotspot";
+    x?: number;
+    y?: number;
+    height?: number;
+    width?: number;
 };
 
 export type InternationalizedArrayTextValue = {
-  _type: "internationalizedArrayTextValue";
-  value?: string;
+    _type: "internationalizedArrayTextValue";
+    value?: string;
 };
 
 export type InternationalizedArrayStringValue = {
-  _type: "internationalizedArrayStringValue";
-  value?: string;
+    _type: "internationalizedArrayStringValue";
+    value?: string;
 };
 
 export type InternationalizedArrayText = Array<
-  {
-    _key: string;
-  } & InternationalizedArrayTextValue
+    {
+        _key: string;
+    } & InternationalizedArrayTextValue
 >;
 
 export type InternationalizedArrayString = Array<
-  {
-    _key: string;
-  } & InternationalizedArrayStringValue
+    {
+        _key: string;
+    } & InternationalizedArrayStringValue
 >;
 
 export type SanityImagePaletteSwatch = {
-  _type: "sanity.imagePaletteSwatch";
-  background?: string;
-  foreground?: string;
-  population?: number;
-  title?: string;
+    _type: "sanity.imagePaletteSwatch";
+    background?: string;
+    foreground?: string;
+    population?: number;
+    title?: string;
 };
 
 export type SanityImagePalette = {
-  _type: "sanity.imagePalette";
-  darkMuted?: SanityImagePaletteSwatch;
-  lightVibrant?: SanityImagePaletteSwatch;
-  darkVibrant?: SanityImagePaletteSwatch;
-  vibrant?: SanityImagePaletteSwatch;
-  dominant?: SanityImagePaletteSwatch;
-  lightMuted?: SanityImagePaletteSwatch;
-  muted?: SanityImagePaletteSwatch;
+    _type: "sanity.imagePalette";
+    darkMuted?: SanityImagePaletteSwatch;
+    lightVibrant?: SanityImagePaletteSwatch;
+    darkVibrant?: SanityImagePaletteSwatch;
+    vibrant?: SanityImagePaletteSwatch;
+    dominant?: SanityImagePaletteSwatch;
+    lightMuted?: SanityImagePaletteSwatch;
+    muted?: SanityImagePaletteSwatch;
 };
 
 export type SanityImageDimensions = {
-  _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+    _type: "sanity.imageDimensions";
+    height?: number;
+    width?: number;
+    aspectRatio?: number;
 };
 
 export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  thumbHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
+    _type: "sanity.imageMetadata";
+    location?: Geopoint;
+    dimensions?: SanityImageDimensions;
+    palette?: SanityImagePalette;
+    lqip?: string;
+    blurHash?: string;
+    thumbHash?: string;
+    hasAlpha?: boolean;
+    isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
-  _id: string;
-  _type: "sanity.fileAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  source?: SanityAssetSourceData;
+    _id: string;
+    _type: "sanity.fileAsset";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    originalFilename?: string;
+    label?: string;
+    title?: string;
+    description?: string;
+    altText?: string;
+    sha1hash?: string;
+    extension?: string;
+    mimeType?: string;
+    size?: number;
+    assetId?: string;
+    uploadId?: string;
+    path?: string;
+    url?: string;
+    source?: SanityAssetSourceData;
 };
 
 export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
+    _type: "sanity.assetSourceData";
+    name?: string;
+    id?: string;
+    url?: string;
 };
 
 export type SanityImageAsset = {
-  _id: string;
-  _type: "sanity.imageAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  metadata?: SanityImageMetadata;
-  source?: SanityAssetSourceData;
+    _id: string;
+    _type: "sanity.imageAsset";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    originalFilename?: string;
+    label?: string;
+    title?: string;
+    description?: string;
+    altText?: string;
+    sha1hash?: string;
+    extension?: string;
+    mimeType?: string;
+    size?: number;
+    assetId?: string;
+    uploadId?: string;
+    path?: string;
+    url?: string;
+    metadata?: SanityImageMetadata;
+    source?: SanityAssetSourceData;
 };
 
 export type Geopoint = {
-  _type: "geopoint";
-  lat?: number;
-  lng?: number;
-  alt?: number;
+    _type: "geopoint";
+    lat?: number;
+    lng?: number;
+    alt?: number;
 };
 
 export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
+    _type: "slug";
+    current?: string;
+    source?: string;
 };
 
 export type AllSanitySchemaTypes =
-  | Project
-  | LocaleString
-  | SanityImageAssetReference
-  | SiteSettings
-  | LocaleText
-  | SanityImageCrop
-  | SanityImageHotspot
-  | InternationalizedArrayTextValue
-  | InternationalizedArrayStringValue
-  | InternationalizedArrayText
-  | InternationalizedArrayString
-  | SanityImagePaletteSwatch
-  | SanityImagePalette
-  | SanityImageDimensions
-  | SanityImageMetadata
-  | SanityFileAsset
-  | SanityAssetSourceData
-  | SanityImageAsset
-  | Geopoint
-  | Slug;
+    | Project
+    | LocaleString
+    | SanityImageAssetReference
+    | SiteSettings
+    | LocaleText
+    | SanityImageCrop
+    | SanityImageHotspot
+    | InternationalizedArrayTextValue
+    | InternationalizedArrayStringValue
+    | InternationalizedArrayText
+    | InternationalizedArrayString
+    | SanityImagePaletteSwatch
+    | SanityImagePalette
+    | SanityImageDimensions
+    | SanityImageMetadata
+    | SanityFileAsset
+    | SanityAssetSourceData
+    | SanityImageAsset
+    | Geopoint
+    | Slug;
 
 export declare const internalGroqTypeReferenceTo: unique symbol;
+
+// Source: ../agency/app/composables/sanity/useSanityProjectById.ts
+// Variable: projectByIdQuery
+// Query: *[_type == "project" && _id == $id][0]{        _id,        "title": coalesce(            title[$locale],            title[$defaultLocale]        )    }
+export type ProjectByIdQueryResult = {
+    _id: string;
+    title: Array<{
+        _type: "localeString";
+        en?: string;
+        fr?: string;
+    }> | null;
+} | null;
+
+// Source: ../agency/app/composables/sanity/useSanityProjects.ts
+// Variable: projectsQuery
+// Query: *[_type == "project"] | order(_createdAt desc) {        _id,        "title": coalesce(            title[$locale],            title[$defaultLocale]        )    }
+export type ProjectsQueryResult = Array<{
+    _id: string;
+    title: Array<{
+        _type: "localeString";
+        en?: string;
+        fr?: string;
+    }> | null;
+}>;
+
+// Source: ../agency/app/composables/sanity/useSanitySiteSettings.ts
+// Variable: siteSettingsQuery
+// Query: *[_type == "siteSettings"][0]{        seoTitle,        seoDescription,        ogImage,        socials,        copyrightText    }
+export type SiteSettingsQueryResult = {
+    seoTitle: LocaleString | null;
+    seoDescription: LocaleText | null;
+    ogImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+    } | null;
+    socials: Array<{
+        platform?: "Instagram" | "LinkedIn" | "Twitter";
+        url?: string;
+        _key: string;
+    }> | null;
+    copyrightText: LocaleText | null;
+} | null;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+    interface SanityQueries {
+        '*[_type == "project" && _id == $id][0]{\n        _id,\n        "title": coalesce(\n            title[$locale],\n            title[$defaultLocale]\n        )\n    }': ProjectByIdQueryResult;
+        '*[_type == "project"] | order(_createdAt desc) {\n        _id,\n        "title": coalesce(\n            title[$locale],\n            title[$defaultLocale]\n        )\n    }': ProjectsQueryResult;
+        '*[_type == "siteSettings"][0]{\n        seoTitle,\n        seoDescription,\n        ogImage,\n        socials,\n        copyrightText\n    }': SiteSettingsQueryResult;
+    }
+}

@@ -1,9 +1,10 @@
 <template>
     <footer class="footer">
         <div class="footer-container">
-            <a href="/" class="footer-logo">Les Griots x Studio</a>
+            <!-- <a href="/" class="footer-logo">Les Griots x Studio</a> -->
+            <NuxtLinkLocale class="footer-logo" to="index">{{ $t('site.title') }}</NuxtLinkLocale>
             <div class="footer-qualiopi">
-                <img src="/images/qualiopi.png" alt="Logo Qualiopi" />
+                <img src="/images/qualiopi.png" alt="Logo Qualiopi">
             </div>
         </div>
 

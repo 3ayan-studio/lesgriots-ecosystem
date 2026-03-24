@@ -12,11 +12,13 @@ export const siteSettings = defineType({
             title: 'Global SEO Title',
             description: 'The default title for the site (e.g., Les Griots Studio)',
             type: 'localeString',
+            validation: rule => rule.required().error('Global SEO Title is required')
         }),
         defineField({
             name: 'seoDescription',
             title: 'Global SEO Description',
             type: 'localeText',
+            validation: rule => rule.required().error('Global SEO Description is required')
         }),
         defineField({
             name: 'ogImage',
@@ -47,6 +49,7 @@ export const siteSettings = defineType({
             name: 'copyrightText',
             title: 'Copyright Text',
             type: 'localeText',
+            validation: rule => rule.required().error('Copyright Text is required')
         })
     ],
     preview: {

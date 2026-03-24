@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { type Module } from '../../../types/formation'
+import type { Module } from '../../../types/formation'
 import { Transition } from 'vue'
 defineProps<{
     module: Module;
@@ -7,7 +7,7 @@ defineProps<{
 const isActive = ref(false)
 </script>
 <template>
-    <div @click="isActive = !isActive" class="module">
+    <div class="module" @click="isActive = !isActive">
         <div class="module-title">
             <p> {{ module.titre }}</p>
             <TempChevron :class="{ rotate: isActive }" />

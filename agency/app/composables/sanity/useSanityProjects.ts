@@ -1,4 +1,4 @@
-import { groq } from '#imports'
+import groq, { defineQuery } from 'groq'
 
 export const useSanityProjects = () => {
     const { locale, defaultLocale } = useI18n()
@@ -13,15 +13,15 @@ export const useSanityProjects = () => {
     // }`
 
     // Object
-    const query = groq`*[_type == "project"] | order(_createdAt desc) {
+    const projectsQuery = defineQuery(groq`*[_type == "project"] | order(_createdAt desc) {
         _id,
         "title": coalesce(
             title[$locale],
             title[$defaultLocale]
         )
-    }`
+    }`)
 
-    return useSanityQuery(query, {
+    return useSanityQuery(projectsQuery, {
         locale: locale.value,
         defaultLocale
     })

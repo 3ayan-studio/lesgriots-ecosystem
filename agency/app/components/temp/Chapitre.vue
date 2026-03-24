@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { type Chapitre } from '../../../types/formation'
+import type { Chapitre } from '../../../types/formation'
 
 defineProps<{
     chapitre: Chapitre;
@@ -8,7 +8,7 @@ defineProps<{
 </script>
 <template>
     <p class="chapitre-title"> {{ chapitre.titre }}</p>
-    <TempModule v-for="module in chapitre.modules" :module=module />
+    <TempModule v-for="(module, index) in chapitre.modules" :key="index" :module=module />
 </template>
 <style scoped>
 .chapitre-title {

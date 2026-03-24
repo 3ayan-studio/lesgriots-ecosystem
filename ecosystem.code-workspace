@@ -1,0 +1,24 @@
+{
+    "folders": [
+        {
+            "name": "---------------             .github             ---------------",
+            "path": ".github"
+        },
+        {
+            "name": "---------------                Ops               ---------------",
+            "path": "ops"
+        },
+        {
+            "name": "---------------       Agency (Nuxt)       ---------------",
+            "path": "agency"
+        },
+        {
+            "name": "---------------       Studio (Sanity)      ---------------",
+            "path": "studio"
+        },
+    ],
+    "settings": {
+        // These are GLOBAL settings that apply to the whole repo
+        "editor.formatOnSave": true
+    }
+}

@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+definePageMeta({
+    layout: "empty"
+});
+
 const formation = {
     titre: "Filmer et éditer du contenu au téléphone portable",
     description: `Vous souhaitez créer du contenu vidéo professionnel avec votre téléphone portable en une seule journée ? Cette formation est faite pour vous.
@@ -185,6 +190,7 @@ onMounted(() => {
     });
 });
 </script>
+
 <template>
     <div>
         <TempHeader />
@@ -214,7 +220,7 @@ onMounted(() => {
                     <p class="formation-text">{{ formation.méthodologie.intro }}</p>
                     <strong>Nous mettons l’accent sur :</strong>
                     <ul class="list">
-                        <li v-for="item in formation.méthodologie.processus">
+                        <li v-for="(item, index) in formation.méthodologie.processus" :key="index">
                             {{ item }}
                         </li>
                     </ul>
@@ -225,7 +231,7 @@ onMounted(() => {
                     <p class="formation-text">{{ formation.objectifs.principal }}</p>
                     <strong>Les objectifs pédagogiques :</strong>
                     <ul class="formation-list">
-                        <li v-for="item in formation.objectifs.pédagogiques">
+                        <li v-for="(item, index) in formation.objectifs.pédagogiques" :key="index">
                             {{ item }}
                         </li>
                     </ul>
@@ -238,16 +244,17 @@ onMounted(() => {
                         {{ formation.nbr_heure }}
                         {{ formation.nbr_heure > 1 ? "heures" : "heure" }})
                     </p>
-                    <div v-for="jour in formation.programme" class="programme-list">
+                    <div v-for="(jour, index) in formation.programme" :key="index" class="programme-list">
                         <p class="formation-subtitle">{{ jour.titre }}</p>
-                        <TempChapitre v-for="chapitre in jour.chapitres" :chapitre="chapitre" />
+                        <TempChapitre v-for="(chapitre, index) in jour.chapitres" :key="index" :chapitre="chapitre" />
                     </div>
                 </div>
                 <div id="infos" class="formation-section">
                     <p class="formation-subtitle">Informations pratiques</p>
                     <strong>Matériel requis :</strong>
                     <ul class="list">
-                        <li v-for="materiel in formation.informations_pratiques.materiels"> {{ materiel }}</li>
+                        <li v-for="(materiel, index) in formation.informations_pratiques.materiels" :key="index"> {{
+                            materiel }}</li>
                     </ul>
                     <strong>Accessibilité aux personnes en situation de handicap</strong>
                     <p>{{ formation.informations_pratiques.accessibilite }}</p>
@@ -260,11 +267,12 @@ onMounted(() => {
         </div>
         <div class="formation-faq questions-list">
             <p id="faq" class="formation-subtitle"> Foire Aux questions</p>
-            <TempQA v-for="qa in formation.faq" :qa=qa />
+            <TempQA v-for="(qa, index) in formation.faq" :key="index" :qa=qa />
         </div>
         <TempFooter />
     </div>
 </template>
+
 <style scoped>
 /* Structure de base */
 .hero-video {
