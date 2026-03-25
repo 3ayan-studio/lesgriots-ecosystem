@@ -3,7 +3,7 @@ name: "🚀 Deployment Orchestration"
 on:
     push:
         tags:
-            - "staging-*" # Triggers when you push a tag like: staging-v1.2.0-rc.1, staging-v1.2.0-rc.2 (NO SLASHES, ONLY INTEGERS DOTS & HYPHENS)
+            - "staging-*" # Triggers when you push a tag like: staging-v1.2.0-rc.1, staging-v1.2.0-rc.2 (NO SLASHES, ONLY INTEGERS DOTS & HYPHENS) - If production next version will be v1.3 then the tag will be staging-v1.3.0-rc.1
             - "v*" # Triggers when you push a tag like: v1.2.0 (NO SLASHES, ONLY INTEGERS & DOTS)
 
 jobs:
