@@ -81,13 +81,6 @@ export default defineNuxtConfig({
         },
     },
 
-    nitro: {
-        prerender: {
-            crawlLinks: true,
-            routes: ["/"]
-        }
-    },
-
     app: {
         head: {
             link: [
@@ -141,38 +134,24 @@ export default defineNuxtConfig({
 
     // ISR Caching
     routeRules: {
-        "/**": {
-            swr: true,
-            headers: {
-                'Cache-Control': 's-maxage=3600, stale-while-revalidate'
-            }
-        },
+        // home
+        "/": { swr: true, },
+        "/fr": { swr: true, },
 
-        "/api/**": {
-            swr: false,
-            headers: {
-                'Cache-Control': 'no-cache'
-            }
-        }
-        
-        // // home
-        // "/": { swr: true, },
-        // "/fr": { swr: true, },
+        // formation
+        "/formation": { swr: true, },
+        "/fr/formation": { swr: true, },
 
-        // // formation
-        // "/formation": { swr: true, },
-        // "/fr/formation": { swr: true, },
+        // work listing
+        "/work": { swr: true, },
+        "/fr/work": { swr: true, },
 
-        // // work listing
-        // "/work": { swr: true, },
-        // "/fr/work": { swr: true, },
+        // work detail (dynamic)
+        "/work/**": { swr: true, },
+        "/fr/work/**": { swr: true, },
 
-        // // work detail (dynamic)
-        // "/work/**": { swr: true, },
-        // "/fr/work/**": { swr: true, },
-
-        // // about
-        // "/about": { swr: true, },
-        // "/fr/about": { swr: true, },
+        // about
+        "/about": { swr: true, },
+        "/fr/about": { swr: true, },
     },
 });

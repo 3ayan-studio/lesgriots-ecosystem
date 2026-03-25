@@ -16,8 +16,9 @@ jobs:
                   script: |
                       set -e
 
+                      ENVIRONMENT=${{ startsWith(github.ref_name, 'staging-') && 'staging' || 'production' }}
                       TAG_NAME="${{ github.ref_name }}"
-                      RELEASE_DIR="/var/www/ecosystem/releases/release-$TAG_NAME"
+                      RELEASE_DIR="/var/www/ecosystem/$ENVIRONMENT/releases/release-$TAG_NAME"
 
                       echo "=========================================="
                       echo "🏗️ BUILDING STUDIO: $TAG_NAME"
