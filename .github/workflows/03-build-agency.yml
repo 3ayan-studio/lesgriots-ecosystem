@@ -34,6 +34,7 @@ jobs:
                       echo "NUXT_SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}" >> .env
                       echo "NUXT_NITRO_CACHE_DIR=${{ secrets.AGENCY_NITRO_CACHE_DIR }}" >> .env
                       echo "NUXT_DEPLOY_SECRET=${{ secrets.DEPLOY_SECRET }}" >> .env
+                      echo "${{ secrets.DEPLOY_SECRET }}"
                       echo "NUXT_BASE_URL=${{ secrets.AGENCY_BASE_URL }}" >> .env
                       echo "NUXT_CLOUDFLARE_CACHE_PURGE_TOKEN=${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" >> .env
                       echo "NUXT_CLOUDFLARE_ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}" >> .env
