@@ -1,4 +1,24 @@
 // PM2 ecosystem configuration file
+const fs = require("fs")
+function loadEnv(filePath) {
+    try {
+        const content = fs.readFileSync(filePath, "utf8")
+        const env = {}
+        for (const line of content.split("\n")) {
+            const trimmed = line.trim()
+            if (!trimmed || trimmed.startsWith("#")) continue
+            const [key, ...rest] = trimmed.split("=")
+            env[key.trim()] = rest.join("=").trim()
+        }
+        return env
+    } catch {
+        return {}
+    }
+}
+
+const prodEnv = loadEnv("/var/www/ecosystem/shared/production.env")
+const stagingEnv = loadEnv("/var/www/ecosystem/shared/staging.env")
+
 module.exports = {
     apps: [
         {
@@ -12,6 +32,7 @@ module.exports = {
             time: true,
             port: 3000,
             env: {
+                ...prodEnv,
                 NODE_ENV: "production",
                 PORT: "3000",
                 HOST: "127.0.0.1"
@@ -28,8 +49,7 @@ module.exports = {
             time: true,
             port: 3001,
             env: {
-                // Nuxt standardizes "production" as the build environment name,
-                // but we run it on a separate port for staging
+                ...stagingEnv,
                 NODE_ENV: "production",
                 PORT: "3001",
                 HOST: "127.0.0.1"
