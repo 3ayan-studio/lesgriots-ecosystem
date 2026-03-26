@@ -17,7 +17,7 @@ jobs:
                       set -e
 
                       ENVIRONMENT=${{ startsWith(github.ref_name, 'staging-') && 'staging' || 'production' }}
-                      RELEASE_HISTORY_COUNT=${{ startsWith(github.ref_name, 'staging-') && '1' || '5' }}
+                      RELEASE_HISTORY_COUNT=${{ startsWith(github.ref_name, 'staging-') && '2' || '6' }}
                       TAG_NAME="${{ github.ref_name }}"
                       RELEASE_DIR="/var/www/ecosystem/$ENVIRONMENT/releases/release-$TAG_NAME"
                       LIVE_LINK="/var/www/ecosystem/$ENVIRONMENT/current"
@@ -48,8 +48,8 @@ jobs:
                       ls -t | tail -n +$RELEASE_HISTORY_COUNT | xargs -r rm -rf
                       echo "✅ Cleanup complete."
 
-                      # --- Remove .env from apps ---
-                      rm -rf $LIVE_LINK/agency/.env
+                      # # --- Remove .env from apps ---
+                      # rm -rf $LIVE_LINK/agency/.env
 
                       # --- Trigger ISR Cache Wipe ---
                       echo "🌐 Pinging Nuxt to wipe ISR cache..."

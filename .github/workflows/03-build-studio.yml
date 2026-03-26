@@ -26,11 +26,17 @@ jobs:
 
                       cd $RELEASE_DIR/studio
 
-                      echo "📝 Injecting Environment Variables (.env)..."
-                      echo "SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
-                      echo "SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
-                      echo "SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
-                      echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
+                      # echo "📝 Injecting Environment Variables (.env)..."
+                      # echo "SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
+                      # echo "SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
+                      # echo "SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
+                      # echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
+
+                      echo "📝 Injecting Environment Variables in shell..."
+                      export SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}
+                      export SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}
+                      export SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}
+                      export SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}
 
                       echo "📦 Running npm ci (Studio)..."
                       npm ci --legacy-peer-deps
