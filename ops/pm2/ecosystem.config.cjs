@@ -16,8 +16,8 @@ function loadEnv(filePath) {
     }
 }
 
-const agencyProdEnv = loadEnv("/var/www/ecosystem/shared/production/agency-production.env")
-const agencyStagingEnv = loadEnv("/var/www/ecosystem/shared/staging/agency-staging.env")
+const agencyProdEnv = loadEnv("/var/www/ecosystem/production/current/agency/.env")
+const agencyStagingEnv = loadEnv("/var/www/ecosystem/staging/current/agency/.env")
 
 module.exports = {
     apps: [
