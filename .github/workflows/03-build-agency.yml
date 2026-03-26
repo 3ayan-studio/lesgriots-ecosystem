@@ -26,29 +26,29 @@ jobs:
 
                       cd $RELEASE_DIR/agency
 
-                      # echo "📝 Injecting Environment Variables (.env)..."
-                      # echo "NUXT_SANITY_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
-                      # echo "NUXT_SANITY_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
-                      # echo "NUXT_SANITY_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
-                      # echo "NUXT_SANITY_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
-                      # echo "NUXT_SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}" >> .env
-                      # echo "NUXT_NITRO_CACHE_DIR=${{ secrets.AGENCY_NITRO_CACHE_DIR }}" >> .env
-                      # echo "NUXT_DEPLOY_SECRET=${{ secrets.DEPLOY_SECRET }}" >> .env
-                      # echo "NUXT_BASE_URL=${{ secrets.AGENCY_BASE_URL }}" >> .env
-                      # echo "NUXT_CLOUDFLARE_CACHE_PURGE_TOKEN=${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" >> .env
-                      # echo "NUXT_CLOUDFLARE_ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}" >> .env
+                      echo "📝 Injecting Environment Variables (.env)..."
+                      echo "NUXT_SANITY_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
+                      echo "NUXT_SANITY_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
+                      echo "NUXT_SANITY_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
+                      echo "NUXT_SANITY_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
+                      echo "NUXT_SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}" >> .env
+                      echo "NUXT_NITRO_CACHE_DIR=${{ secrets.AGENCY_NITRO_CACHE_DIR }}" >> .env
+                      echo "NUXT_DEPLOY_SECRET=${{ secrets.DEPLOY_SECRET }}" >> .env
+                      echo "NUXT_BASE_URL=${{ secrets.AGENCY_BASE_URL }}" >> .env
+                      echo "NUXT_CLOUDFLARE_CACHE_PURGE_TOKEN=${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" >> .env
+                      echo "NUXT_CLOUDFLARE_ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}" >> .env
 
-                      echo "📝 Injecting Environment Variables in shell..."
-                      export NUXT_SANITY_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}
-                      export NUXT_SANITY_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}
-                      export NUXT_SANITY_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}
-                      export NUXT_SANITY_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}
-                      export NUXT_SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}
-                      export NUXT_NITRO_CACHE_DIR=${{ secrets.AGENCY_NITRO_CACHE_DIR }}
-                      export NUXT_DEPLOY_SECRET=${{ secrets.DEPLOY_SECRET }}
-                      export NUXT_BASE_URL=${{ secrets.AGENCY_BASE_URL }}
-                      export NUXT_CLOUDFLARE_CACHE_PURGE_TOKEN=${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}
-                      export NUXT_CLOUDFLARE_ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}
+                      # echo "📝 Injecting Environment Variables in shell..."
+                      # export NUXT_SANITY_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}
+                      # export NUXT_SANITY_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}
+                      # export NUXT_SANITY_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}
+                      # export NUXT_SANITY_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}
+                      # export NUXT_SANITY_REVALIDATE_SECRET=${{ secrets.SANITY_REVALIDATE_SECRET }}
+                      # export NUXT_NITRO_CACHE_DIR=${{ secrets.AGENCY_NITRO_CACHE_DIR }}
+                      # export NUXT_DEPLOY_SECRET=${{ secrets.DEPLOY_SECRET }}
+                      # export NUXT_BASE_URL=${{ secrets.AGENCY_BASE_URL }}
+                      # export NUXT_CLOUDFLARE_CACHE_PURGE_TOKEN=${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}
+                      # export NUXT_CLOUDFLARE_ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}
 
                       echo "📦 Running npm ci (Agency)..."
                       npm ci --legacy-peer-deps

@@ -34,9 +34,9 @@ jobs:
                       echo "🔄 Reloading Node.js via PM2..."
                       pm2 reload $LIVE_LINK/ops/pm2/ecosystem.config.cjs --only agency-$ENVIRONMENT --update-env
 
-                      # --- Save the PM2 state to ~/.pm2/dump.pm2 ---
-                      echo "💾 Saving PM2 state..."
-                      pm2 save
+                      # # --- Save the PM2 state to ~/.pm2/dump.pm2 ---
+                      # echo "💾 Saving PM2 state..."
+                      # pm2 save
 
                       echo "=========================================="
                       echo "🎉 DEPLOYMENT SUCCESSFUL: $TAG_NAME"
