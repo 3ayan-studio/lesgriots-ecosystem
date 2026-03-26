@@ -16,8 +16,8 @@ function loadEnv(filePath) {
     }
 }
 
-const prodEnv = loadEnv("/var/www/ecosystem/shared/production.env")
-const stagingEnv = loadEnv("/var/www/ecosystem/shared/staging.env")
+const agencyProdEnv = loadEnv("/var/www/ecosystem/shared/production/agency-production.env")
+const agencyStagingEnv = loadEnv("/var/www/ecosystem/shared/staging/agency-staging.env")
 
 module.exports = {
     apps: [
@@ -32,7 +32,7 @@ module.exports = {
             time: true,
             port: 3000,
             env: {
-                ...prodEnv,
+                ...agencyProdEnv,
                 NODE_ENV: "production",
                 PORT: "3000",
                 HOST: "127.0.0.1"
@@ -49,7 +49,7 @@ module.exports = {
             time: true,
             port: 3001,
             env: {
-                ...stagingEnv,
+                ...agencyStagingEnv,
                 NODE_ENV: "production",
                 PORT: "3001",
                 HOST: "127.0.0.1"

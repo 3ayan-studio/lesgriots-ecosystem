@@ -27,12 +27,10 @@ jobs:
                       cd $RELEASE_DIR/studio
 
                       echo "📝 Injecting Environment Variables (.env)..."
-                      cat << EOF > /var/www/ecosystem/shared/$ENVIRONMENT.env
-                      SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}
-                      SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}
-                      SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}
-                      SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}
-                      EOF
+                      echo "SANITY_STUDIO_AGENCY_PROJECT_ID=${{ secrets.SANITY_AGENCY_PROJECT_ID }}" >> .env
+                      echo "SANITY_STUDIO_AGENCY_DATASET=${{ secrets.SANITY_AGENCY_DATASET }}" >> .env
+                      echo "SANITY_STUDIO_AGENCY_API_VERSION=${{ secrets.SANITY_AGENCY_API_VERSION }}" >> .env
+                      echo "SANITY_STUDIO_AGENCY_STUDIO_APP_ID=${{ secrets.SANITY_AGENCY_STUDIO_APP_ID }}" >> .env
 
                       echo "📦 Running npm ci (Studio)..."
                       npm ci --legacy-peer-deps
