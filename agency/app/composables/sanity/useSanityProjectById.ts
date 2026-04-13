@@ -1,5 +1,5 @@
 import groq, { defineQuery } from 'groq'
-import type { ProjectByIdQueryResult } from '../../../types/sanity.types'
+import type { ProjectByIdQueryResult } from '../../../shared/types/sanity.types'
 
 export const useSanityProjectById = (id: string) => {
     const { locale, defaultLocale } = useI18n()

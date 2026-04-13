@@ -1,5 +1,5 @@
 import groq, { defineQuery } from 'groq'
-import type { SiteSettingsQueryResult } from '../../../types/sanity.types'
+import type { SiteSettingsQueryResult } from '../../../shared/types/sanity.types'
 
 export const useSanitySiteSettings = () => {
     const { locale, defaultLocale } = useI18n()

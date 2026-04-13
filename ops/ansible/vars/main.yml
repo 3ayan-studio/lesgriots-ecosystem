@@ -1,0 +1,38 @@
+# ===========================================
+# Variables — Centralized Configuration
+# ===========================================
+# All values used across the playbook. Update these once,
+# and every task/template will pick them up automatically.
+
+# --- User ---
+deploy_user: deployment
+deploy_group: deployment
+
+# --- Domain ---
+domain: lesgriotsxstudio.com
+
+# --- Node.js ---
+node_major_version: "22" # NodeSource major version
+
+# --- App Ports ---
+agency_prod_port: 3000
+agency_staging_port: 3001
+
+# --- Directory Structure ---
+base_dir: /var/www/ecosystem
+environments:
+    - production
+    - staging
+
+# --- Nginx ---
+nginx_conf_dir: /etc/nginx/sites-available
+nginx_enabled_dir: /etc/nginx/sites-enabled
+
+# --- Certbot ---
+certbot_domains:
+    - "{{ domain }}"
+    - "www.{{ domain }}"
+    - "staging.{{ domain }}"
+    - "studio.{{ domain }}"
+    # staging.studio requires Advanced Certificate Manager on Cloudflare
+    # or grey-cloud + certbot (handled separately)

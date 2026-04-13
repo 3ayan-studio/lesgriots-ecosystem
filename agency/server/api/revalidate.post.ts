@@ -2,7 +2,6 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event);
 
     const secret = config.deploySecret;
-    console.log("secret", secret);
     const authHeader = getHeader(event, "authorization");
     if (!secret) {
         console.error("🚨 DEPLOY_SECRET is not set in environment variables!");

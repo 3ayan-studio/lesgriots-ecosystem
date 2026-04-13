@@ -1,0 +1,300 @@
+# ================================================================
+# Ansible Playbook — Full VPS Provisioning
+# ================================================================
+# What it does (in order):
+#   1. Updates system packages
+#   2. Creates a "deployment" user with SSH access
+#   3. Configures firewall (UFW)
+#   4. Installs Node.js (via NodeSource)
+#   5. Installs PM2 globally + configures startup on boot
+#   6. Installs & configures Nginx with your site configs
+#   7. Creates the full directory structure for deployments
+#   8. Generates an SSH deploy key for GitHub
+#   9. Installs Certbot and obtains SSL certificates
+# ================================================================
+
+# Run with:
+#   ansible-playbook -i "VPS_IP," -u debian -K ops/ansible/playbook.yml -e "certbot_email=EMAIL_ADDRESS"
+#
+# -u debian = SSH as the default Debian sudo user.
+# become: true = escalate to root via sudo for tasks that need it.
+
+- name: Provision LesGriots Ecosystem VPS
+  hosts: all
+  become: true
+  vars_files:
+      - vars/main.yml
+
+  tasks:
+      # ======================================
+      # 1. SYSTEM UPDATE
+      # ======================================
+      - name: 📦 Update apt cache and upgrade all packages
+        apt:
+            update_cache: yes
+            upgrade: dist
+            cache_valid_time: 3600
+
+      - name: 📦 Install essential system packages
+        apt:
+            name:
+                - curl
+                - git
+                - ufw
+                - ca-certificates
+                - gnupg
+            state: present
+
+      # ======================================
+      # 2. DEPLOYMENT USER
+      # ======================================
+      - name: 👤 Create deployment user
+        user:
+            name: "{{ deploy_user }}"
+            shell: /bin/bash
+            create_home: yes
+            groups: sudo
+            append: yes
+
+      - name: 🔑 Create .ssh directory for deployment user
+        file:
+            path: "/home/{{ deploy_user }}/.ssh"
+            state: directory
+            owner: "{{ deploy_user }}"
+            group: "{{ deploy_group }}"
+            mode: "0700"
+
+      - name: 🔑 Copy debian user's authorized_keys to deployment user
+        # This copies your SSH key so you (and GitHub Actions) can SSH as "deployment"
+        copy:
+            src: /home/debian/.ssh/authorized_keys
+            dest: "/home/{{ deploy_user }}/.ssh/authorized_keys"
+            owner: "{{ deploy_user }}"
+            group: "{{ deploy_group }}"
+            mode: "0600"
+            remote_src: yes
+
+      - name: 🔑 Allow deployment user to run sudo without password
+        lineinfile:
+            path: /etc/sudoers.d/{{ deploy_user }}
+            line: "{{ deploy_user }} ALL=(ALL) NOPASSWD:ALL"
+            create: yes
+            validate: "visudo -cf %s"
+
+      # ======================================
+      # 3. FIREWALL (UFW)
+      # ======================================
+      - name: 🔒 Allow SSH through firewall
+        ufw:
+            rule: allow
+            name: OpenSSH
+
+      - name: 🔒 Allow HTTP (80) through firewall
+        ufw:
+            rule: allow
+            port: "80"
+            proto: tcp
+
+      - name: 🔒 Allow HTTPS (443) through firewall
+        ufw:
+            rule: allow
+            port: "443"
+            proto: tcp
+
+      - name: 🔒 Enable UFW firewall (deny all other incoming)
+        ufw:
+            state: enabled
+            default: deny
+            direction: incoming
+
+      # ======================================
+      # 4. NODE.JS (via NodeSource)
+      # ======================================
+      - name: 🟢 Download NodeSource setup script
+        get_url:
+            url: "https://deb.nodesource.com/setup_{{ node_major_version }}.x"
+            dest: /tmp/nodesource_setup.sh
+            mode: "0755"
+
+      - name: 🟢 Run NodeSource setup script
+        command: bash /tmp/nodesource_setup.sh
+        args:
+            creates: /etc/apt/sources.list.d/nodesource.list
+
+      - name: 🟢 Install Node.js
+        apt:
+            name: nodejs
+            state: present
+            update_cache: yes
+
+      # ======================================
+      # 5. PM2
+      # ======================================
+      - name: ⚙️ Install PM2 globally
+        npm:
+            name: pm2
+            global: yes
+            state: present
+
+      - name: ⚙️ Configure PM2 startup (auto-start on reboot)
+        # Generates the systemd service for PM2 under the deployment user
+        command: "pm2 startup systemd -u {{ deploy_user }} --hp /home/{{ deploy_user }}"
+        args:
+            creates: "/etc/systemd/system/pm2-{{ deploy_user }}.service"
+
+      # ======================================
+      # 6. NGINX
+      # ======================================
+      - name: 🌐 Install Nginx
+        apt:
+            name: nginx
+            state: present
+
+      - name: 🌐 Remove default Nginx site
+        file:
+            path: "{{ nginx_enabled_dir }}/default"
+            state: absent
+        notify: Reload Nginx
+
+      - name: 🌐 Deploy Agency Nginx config
+        template:
+            src: templates/agency.conf.j2
+            dest: "{{ nginx_conf_dir }}/agency.conf"
+            owner: root
+            group: root
+            mode: "0644"
+        notify: Reload Nginx
+
+      - name: 🌐 Deploy Studio Nginx config
+        template:
+            src: templates/studio.conf.j2
+            dest: "{{ nginx_conf_dir }}/studio.conf"
+            owner: root
+            group: root
+            mode: "0644"
+        notify: Reload Nginx
+
+      - name: 🌐 Enable Agency Nginx site (symlink)
+        file:
+            src: "{{ nginx_conf_dir }}/agency.conf"
+            dest: "{{ nginx_enabled_dir }}/agency.conf"
+            state: link
+        notify: Reload Nginx
+
+      - name: 🌐 Enable Studio Nginx site (symlink)
+        file:
+            src: "{{ nginx_conf_dir }}/studio.conf"
+            dest: "{{ nginx_enabled_dir }}/studio.conf"
+            state: link
+        notify: Reload Nginx
+
+      # ======================================
+      # 7. DIRECTORY STRUCTURE
+      # ======================================
+      - name: 📁 Create ecosystem directory structure
+        file:
+            path: "{{ base_dir }}/{{ item }}/releases"
+            state: directory
+            owner: "{{ deploy_user }}"
+            group: "{{ deploy_group }}"
+            mode: "0755"
+        loop: "{{ environments }}"
+
+      - name: 📁 Set ownership of base directory
+        file:
+            path: "{{ base_dir }}"
+            state: directory
+            owner: "{{ deploy_user }}"
+            group: "{{ deploy_group }}"
+            recurse: yes
+
+      # ======================================
+      # 8. GITHUB DEPLOY KEY
+      # ======================================
+      - name: 🔑 Generate SSH deploy key for GitHub
+        command: >
+            ssh-keygen -t ed25519
+            -f /home/{{ deploy_user }}/.ssh/github_deploy_key
+            -N ""
+            -C "deploy@lesgriots-ecosystem"
+        args:
+            creates: "/home/{{ deploy_user }}/.ssh/github_deploy_key"
+
+      - name: 🔑 Set ownership of deploy key
+        file:
+            path: "/home/{{ deploy_user }}/.ssh/{{ item }}"
+            owner: "{{ deploy_user }}"
+            group: "{{ deploy_group }}"
+            mode: "0600"
+        loop:
+            - github_deploy_key
+            - github_deploy_key.pub
+
+      - name: 🔑 Configure SSH to use deploy key for GitHub
+        copy:
+            content: |
+                Host github.com
+                    IdentityFile ~/.ssh/github_deploy_key
+                    StrictHostKeyChecking no
+            dest: "/home/{{ deploy_user }}/.ssh/config"
+            owner: "{{ deploy_user }}"
+            group: "{{ deploy_group }}"
+            mode: "0600"
+
+      - name: 🔑 Read the public deploy key (add this to GitHub)
+        command: "cat /home/{{ deploy_user }}/.ssh/github_deploy_key.pub"
+        register: github_deploy_key
+        changed_when: false
+
+      - name: 🔑 Display GitHub deploy key
+        debug:
+            msg: |
+                =============================================
+                📋 ADD THIS KEY TO YOUR GITHUB REPO:
+                Settings → Deploy keys → Add deploy key
+                =============================================
+                {{ github_deploy_key.stdout }}
+                =============================================
+
+      # ======================================
+      # 9. CERTBOT / SSL
+      # ======================================
+      - name: 🔐 Install Certbot and Nginx plugin
+        apt:
+            name:
+                - certbot
+                - python3-certbot-nginx
+            state: present
+
+      - name: 🔐 Display SSL instructions
+        debug:
+            msg: |
+                =============================================
+                ⚠️  SSL CERTIFICATES — MANUAL STEP REQUIRED
+                =============================================
+                After this playbook finishes AND your DNS is
+                pointing to this VPS, SSH in and run:
+
+                sudo certbot --nginx \
+                  -d {{ domain }} \
+                  -d www.{{ domain }} \
+                  -d staging.{{ domain }} \
+                  -d studio.{{ domain }} \
+                  --non-interactive \
+                  --agree-tos \
+                  -m {{ certbot_email }}
+
+                For staging.studio (2-level subdomain), you
+                must use Cloudflare grey-cloud DNS + separate:
+                sudo certbot --nginx \
+                  -d staging.studio.{{ domain }}
+                =============================================
+
+  # ======================================
+  # HANDLERS
+  # ======================================
+  handlers:
+      - name: Reload Nginx
+        service:
+            name: nginx
+            state: reloaded

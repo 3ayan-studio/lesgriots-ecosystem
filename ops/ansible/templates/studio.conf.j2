@@ -1,9 +1,14 @@
+# ===========================================
+# Nginx — Studio (Production + Staging)
+# ===========================================
+# Managed by Ansible. Do not edit manually on the VPS.
+
 # --- PRODUCTION STUDIO ---
 server {
     listen 80;
-    server_name studio.lesgriotsxstudio.com;
+    server_name studio.{{ domain }};
 
-    root /var/www/ecosystem/production/current/studio/dist;
+    root {{ base_dir }}/production/current/studio/dist;
     index index.html;
 
     include /etc/nginx/mime.types;
@@ -20,9 +25,9 @@ server {
 # --- STAGING STUDIO ---
 server {
     listen 80;
-    server_name staging.studio.lesgriotsxstudio.com;
+    server_name staging.studio.{{ domain }};
 
-    root /var/www/ecosystem/staging/current/studio/dist;
+    root {{ base_dir }}/staging/current/studio/dist;
     index index.html;
 
     include /etc/nginx/mime.types;

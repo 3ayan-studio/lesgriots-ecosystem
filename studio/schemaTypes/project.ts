@@ -17,12 +17,19 @@ export const project = defineType({
         //     type: 'internationalizedArrayString',
         //     validation: (rule) => rule.required(),
         // }),
-        // defineField({
-        //     name: 'slug',
-        //     type: 'slug',
-        //     options: { source: 'title' },
-        //     validation: (rule) => rule.required(),
-        // }),
+        defineField({
+            name: 'Slug',
+            type: 'slug',
+            options: {
+                source: 'title',
+                slugify: (value: any) => value.en
+                    .toLowerCase()
+                    // remove spaces, hyphens and replace with hyphens
+                    .replace(/-/g, '')
+                    .replace(/\s+/g, '-')
+            },
+            validation: (rule) => rule.required(),
+        }),
         // defineField({
         //     name: 'coverImage',
         //     type: 'image',

@@ -1,0 +1,46 @@
+# ===========================================
+# Nginx — Agency (Production + Staging)
+# ===========================================
+# Managed by Ansible. Do not edit manually on the VPS.
+
+# --- PRODUCTION AGENCY ---
+server {
+    listen 80;
+    server_name {{ domain }} www.{{ domain }};
+
+    gzip on;
+    gzip_proxied any;
+    gzip_comp_level 4;
+    gzip_types text/css application/javascript image/svg+xml;
+
+    location / {
+        proxy_pass http://127.0.0.1:{{ agency_prod_port }};
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# --- STAGING AGENCY ---
+server {
+    listen 80;
+    server_name staging.{{ domain }};
+
+    gzip on;
+    gzip_proxied any;
+    gzip_comp_level 4;
+    gzip_types text/css application/javascript image/svg+xml;
+
+    location / {
+        proxy_pass http://127.0.0.1:{{ agency_staging_port }};
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}

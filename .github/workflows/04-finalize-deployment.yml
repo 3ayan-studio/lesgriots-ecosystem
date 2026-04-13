@@ -48,4 +48,4 @@ jobs:
                       echo "🌐 Pinging Nuxt to wipe ISR cache..."
                       curl -f -sS -X POST "${{ secrets.AGENCY_BASE_URL }}/api/revalidate" -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
 
-                      echo "✅ ISR Synchronization Initiated."
+                      echo "\n✅ ISR Synchronization Initiated."
