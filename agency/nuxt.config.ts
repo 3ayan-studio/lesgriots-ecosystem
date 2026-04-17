@@ -119,17 +119,17 @@ export default defineNuxtConfig({
             redirectOn: "root",
             alwaysRedirect: false,
         },
-        customRoutes: "config",
-        pages: {
-            index: {
-                en: "/",
-                fr: "/",
-            },
-            formation: {
-                en: "/course",
-                fr: "/formation",
-            },
-        },
+        // customRoutes: "config",
+        // pages: {
+        //     index: {
+        //         en: "/",
+        //         fr: "/",
+        //     },
+        //     formation: {
+        //         en: "/course",
+        //         fr: "/formation",
+        //     },
+        // },
     },
 
     // ISR Caching
@@ -138,9 +138,9 @@ export default defineNuxtConfig({
         "/": { swr: true, },
         "/fr": { swr: true, },
 
-        // formation
-        "/formation": { swr: true, },
-        "/fr/formation": { swr: true, },
+        // // formation
+        // "/formation": { swr: true, },
+        // "/fr/formation": { swr: true, },
 
         // work listing
         "/work": { swr: true, },

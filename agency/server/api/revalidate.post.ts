@@ -1,3 +1,5 @@
+import { createClient } from "@nuxtjs/sanity/runtime/client.js";
+
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event);
 
@@ -18,43 +20,49 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    // 2. CLEAR THE CACHE
-    // const storage = useStorage('cache')
-    // await storage.clear()
+    const sanity = createClient({
+        projectId: config.sanityAgencyProjectId,
+        dataset: config.sanityAgencyDataset,
+        apiVersion: config.sanityAgencyApiVersion,
+        useCdn: false,
+    })
+
+    const storage = useStorage('cache')
+    await storage.clear()
     console.log("🧹 Cache fully cleared for new deployment.");
 
-    // 3. IDENTIFY ALL ROUTES TO WARM
-    // Core static routes:
-    // const baseRoutes = [
-    //     '/home', '/fr/home',
-    //     '/work', '/fr/work',
-    //     '/about', '/fr/about'
-    // ]
+    const baseRoutes = [
+        '/', '/fr',
+        // '/work', '/fr/work',
+        // '/about', '/fr/about'
+    ]
 
-    // Optional: Fetch your dynamic project slugs from Sanity to warm them too!
-    // (You would replace this with your actual Sanity client fetch if you want 100% coverage)
-    // const dynamicRoutes: string[] = []
-    /* Example:
-       const projects = await sanityClient.fetch(`*[_type == "project"].slug.current`)
-       projects.forEach(slug => {
-           dynamicRoutes.push(`/projects/${slug}`, `/fr/projects/${slug}`)
-       })
-    */
+    const projects = await sanity.fetch(
+        `*[_type == "project"]{ "slug": Slug.current }`
+    )
 
-    // const allRoutesToWarm = [...baseRoutes, ...dynamicRoutes]
+    const dynamicRoutes: string[] = []
+    projects.forEach((p: { slug: string }) => {
+        dynamicRoutes.push(`/work/${p.slug}`, `/fr/work/${p.slug}`)
+    })
 
-    // 4. TRIGGER BACKGROUND REBUILDS
+    console.log(dynamicRoutes)
+
+    const allRoutesToWarm = [...baseRoutes, ...dynamicRoutes]
+
+    await purgeCloudflare(allRoutesToWarm)
+
     // We do NOT await these. We fire them into the Nitro engine so they build in the background,
     // allowing the API to respond instantly to your GitHub Action.
     // Promise.all(
     //     allRoutesToWarm.map(url =>
-    //         $fetch(url).catch(err => console.error(`⚠️ Failed to warm ${url}:`, err))
+    //         $fetch(`${config.baseUrl}${url}`).catch(err => console.error(`⚠️ Failed to warm ${url}:`, err))
     //     )
     // )
 
     return {
         success: true,
         message: "Cache wiped. Background rebuild initiated for new release.",
-        // warmed_routes_count: allRoutesToWarm.length
+        warmed_routes_count: allRoutesToWarm.length
     };
 });

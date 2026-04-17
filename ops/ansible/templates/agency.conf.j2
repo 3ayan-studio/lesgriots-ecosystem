@@ -14,7 +14,7 @@ server {
     gzip_types text/css application/javascript image/svg+xml;
 
     location / {
-        proxy_pass http://127.0.0.1:{{ agency_prod_port }};
+        proxy_pass http://127.0.0.1:{{ agency_production_port }};
 
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
