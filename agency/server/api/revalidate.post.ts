@@ -48,17 +48,18 @@ export default defineEventHandler(async (event) => {
 
     console.log(dynamicRoutes)
 
-    const allRoutesToWarm = [...baseRoutes, ...dynamicRoutes]
+    // const allRoutesToWarm = [...baseRoutes, ...dynamicRoutes]
+    const allRoutesToWarm = [...baseRoutes]
 
     await purgeCloudflare(allRoutesToWarm)
 
     // We do NOT await these. We fire them into the Nitro engine so they build in the background,
     // allowing the API to respond instantly to your GitHub Action.
-    // Promise.all(
-    //     allRoutesToWarm.map(url =>
-    //         $fetch(`${config.baseUrl}${url}`).catch(err => console.error(`⚠️ Failed to warm ${url}:`, err))
-    //     )
-    // )
+    Promise.all(
+        allRoutesToWarm.map(url =>
+            $fetch(`${config.baseUrl}${url}`).catch(err => console.error(`⚠️ Failed to warm ${url}:`, err))
+        )
+    )
 
     return {
         success: true,
